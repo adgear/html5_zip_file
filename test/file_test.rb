@@ -14,42 +14,49 @@ module HTML5ZipFile
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       content = zip.content
       assert_equal 5, content.size
+      zip.close
     end
 
     def test_files_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       files = zip.files
       assert_equal 3, files.size
+      zip.close
     end
 
     def test_directories_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       directories = zip.directories
       assert_equal 2, directories.size
+      zip.close
     end
 
     def test_files_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       files = zip.files
       assert_equal 3, files.size
+      zip.close
     end
 
     def test_html_files_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       html_files = zip.html_files
       assert_equal 2, html_files.size
+      zip.close
     end
 
     def test_estimated_size_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       estimated_size = zip.estimated_size
       assert_equal 732287, estimated_size
+      zip.close
     end
 
     def test_file_size_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       file_size = zip.file_size
       assert_equal 729766, file_size
+      zip.close
     end
 
     def test_unpack_on_new_empty_folder
@@ -71,6 +78,7 @@ module HTML5ZipFile
       assert_equal '..', entries[1]
       assert_equal 'test.png', entries[2]
 
+      zip.close
       FileUtils.rm_rf(Dir.glob("test/unpack/*"))
     end
 
@@ -78,6 +86,7 @@ module HTML5ZipFile
       assert_raises(HTML5ZipFile::DestinationIsNotEmpty) do
         zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
         zip.unpack('test/unpack_non_empty')
+        zip.close
       end
     end
 
@@ -101,6 +110,7 @@ module HTML5ZipFile
       assert_equal 'test.png', entries[2]
 
       FileUtils.rm_rf("test/new_unpack")
+      zip.close
     end
 
     def test_destroy_unpacked
@@ -113,6 +123,7 @@ module HTML5ZipFile
       assert_equal '..', entries[1]
 
       FileUtils.rm_rf("test/new_unpack")
+      zip.close
     end
 
     def test_validate_when_archive_is_too_big
@@ -120,6 +131,7 @@ module HTML5ZipFile
       zip.validate
       refute zip.is_valid?
       assert_equal "The zip archive is too big.", zip.errors.first
+      zip.close
     end
 
     def test_validate_when_archive_has_too_many_files
@@ -127,6 +139,7 @@ module HTML5ZipFile
       zip.validate
       refute zip.is_valid?
       assert_equal "There are too many files in the zip archive.", zip.errors.first
+      zip.close
     end
 
     def test_validate_when_archive_has_too_many_directories
@@ -134,6 +147,7 @@ module HTML5ZipFile
       zip.validate
       refute zip.is_valid?
       assert_equal "There are too many directories in the zip archive.", zip.errors.first
+      zip.close
     end
 
     def test_validate_when_archive_has_too_many_entries
@@ -141,6 +155,7 @@ module HTML5ZipFile
       zip.validate
       refute zip.is_valid?
       assert_equal "There are too many entries in the zip archive.", zip.errors.first
+      zip.close
     end
   end
 end
