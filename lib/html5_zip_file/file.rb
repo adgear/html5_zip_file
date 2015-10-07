@@ -142,18 +142,17 @@ module HTML5ZipFile
     # Unpacks the zip file to dest. If dest exists, it must be empty. If it
     # does not exist, it will be created.
     def unpack(dest)
-      dir_exists = Dir.exists?(dest)
+      if dest[-1, 1] != '/'
+        dest = "#{dest}/"
+      end
 
+      dir_exists = Dir.exists?(dest)
       if dir_exists && Dir.entries(dest).size > 2
         raise DestinationIsNotEmpty, "Destination directory is not empty."
       end
 
       unless dir_exists
         FileUtils.mkdir_p(dest)
-      end
-
-      if dest[-1, 1] != '/'
-        dest = "#{dest}/"
       end
 
       # Store the destination for use in #destroy_unpacked
@@ -168,9 +167,6 @@ module HTML5ZipFile
     def destroy_unpacked
       return unless Dir.exists?(@last_unpack_dest)
       dest = @last_unpack_dest
-      if dest[-1, 1] != '/'
-        dest = "#{dest}/"
-      end
       FileUtils.rm_rf(Dir.glob("#{dest}*"))
     end
 
