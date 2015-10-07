@@ -1,5 +1,8 @@
 require "html5_zip_file/version"
+require "html5_zip_file/file"
 
-module Html5ZipFile
-  # Your code goes here...
+module HTML5ZipFile
+  Error = Class.new(StandardError)
+  InvalidZipArchive = Class.new(Error)
+  DestinationIsNotEmpty = Class.new(Error)
 end

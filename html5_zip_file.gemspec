@@ -5,7 +5,7 @@ require 'html5_zip_file/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "html5_zip_file"
-  spec.version       = Html5ZipFile::VERSION
+  spec.version       = HTML5ZipFile::VERSION
   spec.authors       = ["Patrick Paul-Hus"]
   spec.email         = ["hydrozen@gmail.com"]
 
@@ -30,4 +30,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest"
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "byebug"
+
+  spec.add_dependency "rubyzip", ">= 1.0.0"
+  spec.add_dependency "rest-client", "~> 1.8.0"
+  spec.add_dependency "nokogiri", "~> 1.6.6.2"
 end

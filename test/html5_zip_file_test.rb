@@ -1,11 +1,7 @@
 require 'test_helper'
 
-class Html5ZipFileTest < Minitest::Test
+class HTML5ZipFileTest < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::Html5ZipFile::VERSION
-  end
-
-  def test_it_does_something_useful
-    assert false
+    refute_nil ::HTML5ZipFile::VERSION
   end
 end
