@@ -140,7 +140,8 @@ module HTML5ZipFile
         dest = "#{dest}/"
       end
 
-      @last_unpack_destination = dest
+      # Store the destination for use in #destroy_unpacked
+      @last_unpack_dest = dest
 
       @zip_file.each do |entry|
         entry.extract("#{dest}#{entry.name}")

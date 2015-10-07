@@ -102,5 +102,17 @@ module HTML5ZipFile
 
       FileUtils.rm_rf("test/new_unpack")
     end
+
+    def test_destroy_unpacked
+      zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
+      zip.unpack('test/new_unpack')
+      assert Dir.exists?('test/new_unpack')
+      zip.destroy_unpacked
+      entries = Dir.entries('test/new_unpack')
+      assert_equal '.', entries[0]
+      assert_equal '..', entries[1]
+
+      FileUtils.rm_rf("test/new_unpack")
+    end
   end
 end
