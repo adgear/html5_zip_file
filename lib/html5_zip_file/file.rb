@@ -6,13 +6,23 @@ require "nokogiri"
 
 module HTML5ZipFile
   class File
-    # The size of the zip archive
+    # The size of the zip archive.
     attr_accessor :file_size
+
+    # Contains the validation errors.
+    attr_accessor :errors
 
     # Initialize a zip file.
     #
     # path: the path of the zip file (can be a path or a URI)
     # validation_opts: the options for validating this zip file.
+    #
+    # They are:
+    #
+    # max_size: the maximum size in bytes of the zip file.
+    # max_nb_files: the maximum number of files in the archive.
+    # max_nb_dirs: the maximum number of directories in the archive.
+    # max_nb_entries: the maximum number of entries in the archive.
     def initialize(path, validation_opts = {})
       @validation_opts = {
         :max_size => 0,
@@ -38,8 +48,10 @@ module HTML5ZipFile
     # Does this zip file respect the validation conditions?
     #
     # Returns true or false
-    def validate?
+    def validate
       is_valid = true
+      errors.clear
+
       if html_files.size == 0
         is_valid = false
         errors << "There are no HTML files in the zip archive."
@@ -74,6 +86,10 @@ module HTML5ZipFile
       end
 
       is_valid
+    end
+
+    def is_valid?
+      errors.empty?
     end
 
     # Returns the content of the zip file, meaning both files and directories.
@@ -156,6 +172,18 @@ module HTML5ZipFile
         dest = "#{dest}/"
       end
       FileUtils.rm_rf(Dir.glob("#{dest}*"))
+    end
+
+    # Inserts the script tag in the html documents that were previously
+    # unpacked.
+    def insert_script_tag(script_tag)
+      html_docs = html_files.map { |f| f.name }
+    end
+
+    # Closes all files that were opened for the operation of this gem.
+    def close
+      @temp_file.close
+      @zip_file.close
     end
 
     private

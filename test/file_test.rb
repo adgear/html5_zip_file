@@ -114,5 +114,33 @@ module HTML5ZipFile
 
       FileUtils.rm_rf("test/new_unpack")
     end
+
+    def test_validate_when_archive_is_too_big
+      zip = HTML5ZipFile::File.new('test/data/test-ad.zip', {:max_size => 1})
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "The zip archive is too big.", zip.errors.first
+    end
+
+    def test_validate_when_archive_has_too_many_files
+      zip = HTML5ZipFile::File.new('test/data/test-ad.zip', {:max_nb_files => 1})
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "There are too many files in the zip archive.", zip.errors.first
+    end
+
+    def test_validate_when_archive_has_too_many_directories
+      zip = HTML5ZipFile::File.new('test/data/test-ad.zip', {:max_nb_dirs => 1})
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "There are too many directories in the zip archive.", zip.errors.first
+    end
+
+    def test_validate_when_archive_has_too_many_entries
+      zip = HTML5ZipFile::File.new('test/data/test-ad.zip', {:max_nb_entries => 1})
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "There are too many entries in the zip archive.", zip.errors.first
+    end
   end
 end
