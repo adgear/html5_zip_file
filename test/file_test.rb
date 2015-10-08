@@ -10,6 +10,12 @@ module HTML5ZipFile
       end
     end
 
+    def test_that_it_raises_exception_when_given_invalid_zip_path
+      assert_raises(HTML5ZipFile::FileNotFound) do
+        HTML5ZipFile::File.new('test/data/does-not-exist.zip')
+      end
+    end
+
     def test_content_on_valid_zip_archive
       zip = HTML5ZipFile::File.new('test/data/test-ad.zip')
       content = zip.content

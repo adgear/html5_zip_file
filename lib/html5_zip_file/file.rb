@@ -32,8 +32,15 @@ module HTML5ZipFile
       }.merge(validation_opts)
 
       @path = path
+
+      begin
+        file_content = open(path).read
+      rescue
+        raise FileNotFound, "The zip archive could not be found."
+      end
+
       @temp_file = Tempfile.new('zip')
-      @temp_file.write open(path).read
+      @temp_file.write file_content
       @file_size = @temp_file.size
       unless is_valid_zip?
         fail InvalidZipArchive, "Not a valid zip file"

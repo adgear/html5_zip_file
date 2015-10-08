@@ -5,4 +5,5 @@ module HTML5ZipFile
   Error = Class.new(StandardError)
   InvalidZipArchive = Class.new(Error)
   DestinationIsNotEmpty = Class.new(Error)
+  FileNotFound = Class.new(Error)
 end
