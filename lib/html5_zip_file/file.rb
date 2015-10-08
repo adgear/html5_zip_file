@@ -201,7 +201,28 @@ module HTML5ZipFile
     # Inserts the script tag in the html documents that were previously
     # unpacked.
     def insert_script_tag(script_tag)
+      return unless @last_unpack_dest
       html_docs = html_files.map { |f| f.name }
+      html_docs.each do |html_doc|
+        content = ::File.read("#{@last_unpack_dest}#{html_doc}")
+        next if content.include?(script_tag)
+
+        doc = Nokogiri::HTML(content)
+        head = doc.css('head')
+        unless head.empty?
+          head.first.prepend_child(script_tag)
+          ::File.open("#{@last_unpack_dest}#{html_doc}", 'w') do |f|
+            f.write doc.to_s
+          end
+          next
+        end
+
+        html = doc.css('html')
+        html.first.prepend_child(script_tag)
+        ::File.open("#{@last_unpack_dest}#{html_doc}", 'w') do |f|
+          f.write doc.to_s
+        end
+      end
     end
 
     # Closes all files that were opened for the operation of this gem.
