@@ -205,12 +205,20 @@ module HTML5ZipFile
       html_docs = html_files.map { |f| f.name }
       html_docs.each do |html_doc|
         content = ::File.read("#{@last_unpack_dest}#{html_doc}")
-        next if content.include?(script_tag)
+        decorated_script_tag = "<!-- inserted by HTML5ZipFile -->#{script_tag}<!-- end of HTML5ZipFile -->"
+        if content.include?("<!-- inserted by HTML5ZipFile -->")
+          regexp = /<!-- inserted by HTML5ZipFile -->.*<!-- end of HTML5ZipFile -->/
+          new_content = content.sub(regexp, decorated_script_tag)
+          ::File.open("#{@last_unpack_dest}#{html_doc}", 'w') do |f|
+            f.write new_content
+          end
+          next
+        end
 
         doc = Nokogiri::HTML(content)
         head = doc.css('head')
         unless head.empty?
-          head.first.prepend_child(script_tag)
+          head.first.prepend_child(decorated_script_tag)
           ::File.open("#{@last_unpack_dest}#{html_doc}", 'w') do |f|
             f.write doc.to_s
           end
@@ -218,7 +226,7 @@ module HTML5ZipFile
         end
 
         html = doc.css('html')
-        html.first.prepend_child(script_tag)
+        html.first.prepend_child(decorated_script_tag)
         ::File.open("#{@last_unpack_dest}#{html_doc}", 'w') do |f|
           f.write doc.to_s
         end

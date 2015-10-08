@@ -113,16 +113,24 @@ module HTML5ZipFile
     end
 
     def test_insert_script_tag_when_there_is_head
+      magic_comment_start = '<!-- inserted by HTML5ZipFile -->'
+      magic_comment_end = '<!-- end of HTML5ZipFile -->'
       script_tag = '<script src="/adgear/html5.bridge.v1.js" type="application/javascript"></script>'
       zip = File.new('test/data/test-ad.zip')
       zip.unpack('test/new_unpack2')
       zip.insert_script_tag(script_tag)
       content = ::File.read('test/new_unpack2/index.html')
       assert content.include?(script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
       content = ::File.read('test/new_unpack2/foo/index.html')
       assert content.include?(script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
       content = ::File.read('test/new_unpack2/foo/index2.html')
       assert content.include?(script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
       FileUtils.rm_rf("test/new_unpack2")
     end
 
