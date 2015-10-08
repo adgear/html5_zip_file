@@ -173,6 +173,14 @@ module HTML5ZipFile
       zip.close
     end
 
+    def test_validate_when_there_are_no_html_files
+      zip = File.new('test/data/test-ad-no-html.zip')
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "There is no HTML file in the zip archive.", zip.errors.first
+      zip.close
+    end
+
     def test_validate_when_archive_is_too_big
       zip = File.new('test/data/test-ad.zip', {:max_size => 1})
       zip.validate

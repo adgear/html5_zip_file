@@ -65,7 +65,12 @@ module HTML5ZipFile
 
       if html_files.size == 0
         is_valid = false
-        errors << "There are no HTML files in the zip archive."
+        errors << "There is no HTML file in the zip archive."
+      end
+
+      if zip_files.size > 0
+        is_valid = false
+        errors << "The archive should not contain zip files."
       end
 
       if @validation_opts[:max_size] > 0
