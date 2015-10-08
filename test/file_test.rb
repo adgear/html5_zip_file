@@ -112,7 +112,7 @@ module HTML5ZipFile
       zip.close
     end
 
-    def test_insert_script_tag_when_there_is_head
+    def test_insert_script_tag
       magic_comment_start = '<!-- inserted by HTML5ZipFile -->'
       magic_comment_end = '<!-- end of HTML5ZipFile -->'
       script_tag = '<script src="/adgear/html5.bridge.v1.js" type="application/javascript"></script>'
@@ -129,6 +129,32 @@ module HTML5ZipFile
       assert content.include?(magic_comment_end)
       content = ::File.read('test/new_unpack2/foo/index2.html')
       assert content.include?(script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
+      FileUtils.rm_rf("test/new_unpack2")
+    end
+
+    def test_insert_script_tag_when_already_mutated
+      magic_comment_start = '<!-- inserted by HTML5ZipFile -->'
+      magic_comment_end = '<!-- end of HTML5ZipFile -->'
+      old_script_tag = '<script src="/adgear/html5.bridge.v1.js" type="application/javascript"></script>'
+      new_script_tag = '<script src="/adgear/html5.bridge.v2.js" type="application/javascript"></script>'
+      zip = File.new('test/data/test-ad-mutated.zip')
+      zip.unpack('test/new_unpack2')
+      zip.insert_script_tag(new_script_tag)
+      content = ::File.read('test/new_unpack2/index.html')
+      assert content.include?(new_script_tag)
+      refute content.include?(old_script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
+      content = ::File.read('test/new_unpack2/foo/index.html')
+      assert content.include?(new_script_tag)
+      refute content.include?(old_script_tag)
+      assert content.include?(magic_comment_start)
+      assert content.include?(magic_comment_end)
+      content = ::File.read('test/new_unpack2/foo/index2.html')
+      assert content.include?(new_script_tag)
+      refute content.include?(old_script_tag)
       assert content.include?(magic_comment_start)
       assert content.include?(magic_comment_end)
       FileUtils.rm_rf("test/new_unpack2")
