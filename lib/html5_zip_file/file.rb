@@ -32,6 +32,10 @@ module HTML5ZipFile
       }.merge(validation_opts)
 
       @path = path
+      @files = nil
+      @directories = nil
+      @html_files = nil
+      @estimated_size = nil
 
       begin
         file_content = open(path).read
@@ -106,44 +110,48 @@ module HTML5ZipFile
 
     # Returns only the files of the zip.
     def files
+      return @files if @files
       files = []
       @zip_file.each do |entry|
         next if entry.ftype == :directory
         files << entry
       end
-      files
+      @files = files
     end
 
     # Returns only the directories of the zip.
     def directories
+      return @directories if @directories
       directories = []
       @zip_file.each do |entry|
         next if entry.ftype == :file
         directories << entry
       end
-      directories
+      @directories = directories
     end
 
     # Returns only the html files.
     def html_files
+      return @html_files if @html_files
       regexp = /\.html?\z/i
       entries = []
       @zip_file.each do |entry|
         next if entry.ftype == :directory
         entries << entry if entry.name =~ regexp
       end
-      entries
+      @html_files = entries
     end
 
     # Returns the estimated size of the content of the zip when uncompressed.
     def estimated_size
+      return @estimated_size if @estimated_size
       estimated_size = 0
       @zip_file.each do |entry|
         if entry.ftype == :file
           estimated_size += entry.size
         end
       end
-      estimated_size
+      @estimated_size = estimated_size
     end
 
     # Unpacks the zip file to dest. If dest exists, it must be empty. If it
@@ -157,10 +165,7 @@ module HTML5ZipFile
       if dir_exists && Dir.entries(dest).size > 2
         raise DestinationIsNotEmpty, "Destination directory is not empty."
       end
-
-      unless dir_exists
-        FileUtils.mkdir_p(dest)
-      end
+      FileUtils.mkdir_p(dest) unless dir_exists
 
       # Store the destination for use in #destroy_unpacked
       @last_unpack_dest = dest
@@ -173,8 +178,10 @@ module HTML5ZipFile
     # Deletes the content of the last unpack operation
     def destroy_unpacked
       return unless Dir.exists?(@last_unpack_dest)
-      dest = @last_unpack_dest
-      FileUtils.rm_rf(Dir.glob("#{dest}*"))
+      Dir.entries(@last_unpack_dest).each do |entry|
+        next if ['.', '..'].include?(entry)
+        FileUtils.remove_entry_secure("#{@last_unpack_dest}entry", :force => true)
+      end
     end
 
     # Inserts the script tag in the html documents that were previously
