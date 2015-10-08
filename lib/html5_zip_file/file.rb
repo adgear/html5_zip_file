@@ -173,6 +173,8 @@ module HTML5ZipFile
       @zip_file.each do |entry|
         entry.extract("#{dest}#{entry.name}")
       end
+
+      add_doctype_if_not_found
     end
 
     # Deletes the content of the last unpack operation.
@@ -201,6 +203,19 @@ module HTML5ZipFile
     def is_valid_zip?
       output = `file #{@temp_file.path}`
       output.include? "Zip archive data"
+    end
+
+    def add_doctype_if_not_found
+      return unless @last_unpack_dest
+      html_files.each do |html_file|
+        content = ::File.read("#{@last_unpack_dest}#{html_file.name}")
+        unless content =~ /\A<!DOCTYPE html>/i
+          ::File.open("#{@last_unpack_dest}#{html_file.name}", 'w') do |f|
+            f.puts "<!DOCTYPE html>"
+            f.puts content
+          end
+        end
+      end
     end
   end
 end
