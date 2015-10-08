@@ -142,6 +142,18 @@ module HTML5ZipFile
       @html_files = entries
     end
 
+    # Returns only the zip files inside the zip. These should probably
+    # be forbidden by validation as it could indicate a zip bomb.
+    def zip_files
+      regexp = /\.zip\z/i
+      entries = []
+      @zip_file.each do |entry|
+        next if entry.ftype == :directory
+        entries << entry if entry.name =~ regexp
+      end
+      entries
+    end
+
     # Returns the estimated size of the content of the zip when uncompressed.
     def estimated_size
       return @estimated_size if @estimated_size
