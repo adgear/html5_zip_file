@@ -175,7 +175,7 @@ module HTML5ZipFile
       end
     end
 
-    # Deletes the content of the last unpack operation
+    # Deletes the content of the last unpack operation.
     def destroy_unpacked
       return unless Dir.exists?(@last_unpack_dest)
       Dir.entries(@last_unpack_dest).each do |entry|
