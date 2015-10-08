@@ -181,6 +181,14 @@ module HTML5ZipFile
       zip.close
     end
 
+    def test_validate_when_possible_zipbomb
+      zip = File.new('test/data/test-ad-with-zip.zip')
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "The archive should not contain zip files.", zip.errors[1]
+      zip.close
+    end
+
     def test_validate_when_archive_is_too_big
       zip = File.new('test/data/test-ad.zip', {:max_size => 1})
       zip.validate
