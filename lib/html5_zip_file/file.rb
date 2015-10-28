@@ -28,7 +28,9 @@ module HTML5ZipFile
         :max_size => 0,
         :max_nb_files => 0,
         :max_nb_dirs => 0,
-        :max_nb_entries => 0
+        :max_nb_entries => 0,
+        :max_path_chars => 0,
+        :max_path_components => 0
       }.merge(validation_opts)
 
       @path = path
@@ -98,6 +100,13 @@ module HTML5ZipFile
         if content.size > @validation_opts[:max_nb_entries]
           is_valid = false
           errors << "There are too many entries in the zip archive."
+        end
+      end
+
+      if @validation_opts[:max_path_chars] > 0
+        if content.any? { |e| e.name.size > @validation_opts[:max_path_chars] }
+          is_valid = false
+          errors << "Maximum path length exceeded."
         end
       end
 

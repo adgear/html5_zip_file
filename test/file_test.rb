@@ -220,5 +220,13 @@ module HTML5ZipFile
       assert_equal "There are too many entries in the zip archive.", zip.errors.first
       zip.close
     end
+
+    def test_validate_when_paths_too_long
+      zip = File.new('test/data/test-ad.zip', {:max_path_chars => 5})
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "Maximum path length exceeded.", zip.errors.first
+      zip.close
+    end
   end
 end
