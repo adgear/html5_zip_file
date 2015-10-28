@@ -228,5 +228,13 @@ module HTML5ZipFile
       assert_equal "Maximum path length exceeded.", zip.errors.first
       zip.close
     end
+
+    def test_validate_when_too_many_path_components
+      zip = File.new('test/data/test-ad.zip', {:max_path_components => 1 })
+      zip.validate
+      refute zip.is_valid?
+      assert_equal "Maximum path components exceeded.", zip.errors.first
+      zip.close
+    end
   end
 end

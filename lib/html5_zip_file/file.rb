@@ -3,6 +3,7 @@ require "tempfile"
 require "zip"
 require "fileutils"
 require "nokogiri"
+require "pathname"
 
 module HTML5ZipFile
   class File
@@ -107,6 +108,18 @@ module HTML5ZipFile
         if content.any? { |e| e.name.size > @validation_opts[:max_path_chars] }
           is_valid = false
           errors << "Maximum path length exceeded."
+        end
+      end
+
+      if @validation_opts[:max_path_components] > 0
+        exceeded = content.any? do |entry|
+          components = Pathname.new(entry.name).each_filename.count
+          components > @validation_opts[:max_path_components]
+        end
+
+        if exceeded
+          is_valid = false
+          errors << "Maximum path components exceeded."
         end
       end
 
