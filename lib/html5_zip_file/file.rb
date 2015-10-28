@@ -199,7 +199,7 @@ module HTML5ZipFile
       return unless Dir.exists?(@last_unpack_dest)
       Dir.entries(@last_unpack_dest).each do |entry|
         next if ['.', '..'].include?(entry)
-        FileUtils.remove_entry_secure("#{@last_unpack_dest}entry", :force => true)
+        FileUtils.remove_entry_secure("#{@last_unpack_dest}#{entry}", :force => true)
       end
     end
 

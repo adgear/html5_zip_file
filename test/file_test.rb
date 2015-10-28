@@ -166,6 +166,7 @@ module HTML5ZipFile
       assert Dir.exists?('test/new_unpack')
       zip.destroy_unpacked
       entries = Dir.entries('test/new_unpack')
+      assert_equal 2, entries.size
       assert_equal '.', entries[0]
       assert_equal '..', entries[1]
 
