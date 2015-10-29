@@ -1,8 +1,6 @@
 # Html5ZipFile
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/html5_zip_file`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+HTML 5 zip file validation, unpacking and manipulation.
 
 ## Installation
 
@@ -22,20 +20,86 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'html5_zip_file'
+
+HTML5ZipFile::File.open('path/to/file.zip') do |f|
+  # ...
+end
+```
+
+### Validation
+
+The `validate` method validates the zip file itself as well as other options:
+
+- `:size`: maximum zip file size
+- `:entry_count`: maximum number of entries (files and directories)
+- `:file_count`: maximum number of files
+- `:directory_count`: maximum number of directories
+- `:path_length`: maximum path length in characters
+- `:path_components`: maximum number of path components
+- `:contains_html_file`: require or disallow HTML files to exist
+- `:contains_zip_file`: require or disallow embedded zip files to exist
+
+If any validations failed, their keys will be in `failures` and `validate` will
+return false.
+
+```ruby
+HTML5ZipFile::File.open('path/to/file.zip') do |f|
+  unless f.validate(:path_length => 25)
+    if f.failures.include? :zip
+      puts 'File is not a valid zip'
+    elsif f.failures.include? :path_length
+      puts 'File contains paths exceeding maximum length'
+    end
+  end
+end
+```
+
+### Unpack & destroy
+
+The `unpack` method unpacks the zip file contents to a new or empty directory.
+
+The `destroy_unpacked` cleans up previously unpacked files.
+
+```ruby
+HTML5ZipFile::File.open('path/to/file.zip') do |f|
+  f.unpack('data')
+  f.destroy_unpacked
+end
+```
+
+### Inject script tag
+
+The `inject_script_tag` method injects a script tag into all previously
+unpacked HTML files.
+
+```ruby
+HTML5ZipFile::File.open('path/to/file.zip') do |f|
+  f.unpack('data')
+  f.inject_script_tag('<script src="example.js"></script>')
+end
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`rake test` to run the tests. You can also run `bin/console` for an interactive
+prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To
+release a new version, update the version number in `version.rb`, and then run
+`bundle exec rake release`, which will create a git tag for the version, push
+git commits and tags, and push the `.gem` file to
+[rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/html5_zip_file.
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/adgear/html5_zip_file.
 
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+The gem is available as open source under the terms of the [MIT
+License](http://opensource.org/licenses/MIT).
