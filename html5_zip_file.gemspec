@@ -35,6 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "byebug"
 
   spec.add_dependency "rubyzip", ">= 1.0.0"
-  spec.add_dependency "rest-client", "~> 1.8.0"
   spec.add_dependency "nokogiri", "~> 1.6.6.2"
 end
