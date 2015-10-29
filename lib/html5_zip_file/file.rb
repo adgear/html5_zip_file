@@ -6,9 +6,13 @@ require 'zip'
 
 module HTML5ZipFile
   class File
+    # Zip file size.
     attr_reader :size
+
+    # Array of validation failure keywords.
     attr_reader :failures
 
+    # Open a zip file by path or URI.
     def self.open(uri)
       Kernel::open(uri) do |f|
         begin
@@ -21,11 +25,26 @@ module HTML5ZipFile
       end
     end
 
-    def initialize(file, zip)
+    def initialize(file, zip) # :nodoc:
       @size = file.size
       @zip = zip
     end
 
+    # Validate zip file with options:
+    #
+    # - +:size+:: maximum zip file size
+    # - +:entry_count+:: maximum number of entries (files and directories)
+    # - +:file_count+:: maximum number of files
+    # - +:directory_count+:: maximum number of directories
+    # - +:path_length+:: maximum path length in characters
+    # - +:path_components+:: maximum number of path components
+    # - +:contains_html_file+:: require or disallow HTML files to exist
+    # - +:contains_zip_file+:: require or disallow embedded zip files to exist
+    #
+    # Populates #failures with keywords of failed validations. If file is not
+    # a valid zip, #failures will contain +:zip+.
+    #
+    # Returns +true+ if validations passed.
     def validate(options = {})
       @failures = []
 
@@ -69,32 +88,41 @@ module HTML5ZipFile
       @failures.none?
     end
 
+    # Return total size of zip file contents.
     def contents_size
       @contents_size ||= file_entries.map(&:size).reduce(0, :+)
     end
 
+    # Return all entries.
     def entries
       @zip.entries
     end
 
+    # Return file entries.
     def file_entries
       @file_entries ||= @zip.select do |entry|
         entry.ftype == :file
       end
     end
 
+    # Return directory entries.
     def directory_entries
       @directory_entries ||= @zip.select do |entry|
         entry.ftype == :directory
       end
     end
 
+    # Return HTML file entries.
     def html_file_entries
       @html_file_entries ||= file_entries.select do |entry|
         entry.name =~ /\.html?\z/i
       end
     end
 
+    # Unpack the zip file to +dest+, which must either be an empty directory
+    # or not exist.
+    #
+    # If the destination is not empty, raises #DestinationNotEmpty.
     def unpack(dest)
       exists = Dir.exists?(dest)
       if exists && Dir.entries(dest).size > 2
@@ -109,12 +137,18 @@ module HTML5ZipFile
       end
     end
 
+    # Destroy previously unpacked contents.
     def destroy_unpacked
       return unless @unpack_dest && Dir.exists?(@unpack_dest)
       FileUtils.remove_entry_secure(@unpack_dest, :force => true)
       @unpack_dest = nil
     end
 
+    # Inject a script tag into alll unpacked HTML files, replacing any
+    # previously injected script tag.
+    #
+    # Raises #NotUnpacked if #unpack has not been called.
+    # Raises #InvalidScriptTag if +script_tag+ does not contain a valid tag.
     def inject_script_tag(script_tag)
       raise NotUnpacked, 'Zip file not unpacked' unless @unpack_dest
 
