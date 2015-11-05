@@ -9,9 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Patrick Paul-Hus"]
   spec.email         = ["hydrozen@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{HTML 5 zip file validation, unpacking and manipulation}
+  spec.homepage      = "https://github.com/adgear/html5_zip_file"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
