@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Patrick Paul-Hus"]
   spec.email         = ["hydrozen@gmail.com"]
 
-  spec.summary       = %q{HTML 5 zip file validation, unpacking and manipulation}
+  spec.summary       = %q{HTML 5 zip file}
+  spec.description   = %q{HTML 5 zip file validation, unpacking and manipulation}
   spec.homepage      = "https://github.com/adgear/html5_zip_file"
   spec.license       = "MIT"
 
@@ -28,11 +29,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest"
-  spec.add_development_dependency "minitest-reporters"
-  spec.add_development_dependency "pry"
-  spec.add_development_dependency "byebug"
+  spec.add_development_dependency "minitest", "~> 5.8"
+  spec.add_development_dependency "minitest-reporters", "~> 1.1"
+  spec.add_development_dependency "pry", "~> 0.10"
+  spec.add_development_dependency "byebug", "~> 8.0"
 
-  spec.add_dependency "rubyzip", ">= 1.0.0"
-  spec.add_dependency "nokogiri", "~> 1.6.6.2"
+  spec.add_dependency "rubyzip", "~> 1.0"
+  spec.add_dependency "nokogiri", "~> 1.6"
 end
