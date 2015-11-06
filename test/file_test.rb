@@ -4,6 +4,14 @@ require 'byebug'
 
 module HTML5ZipFile
   class FileTest < Minitest::Test
+    def test_open_io
+      ::File.open('test/data/test-ad.zip') do |f|
+        File.open_io(f) do |z|
+          assert z
+        end
+      end
+    end
+
     def test_invalid_path
       assert_raises(Errno::ENOENT) do
         File.open('test/data/missing.zip') { |f| f }

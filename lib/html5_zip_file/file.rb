@@ -12,15 +12,22 @@ module HTML5ZipFile
     # Array of validation failure keywords.
     attr_reader :failures
 
+    # Open a zip file from an +IO+ object.
+    def self.open_io(io)
+      begin
+        Zip::File.open_buffer(io) do |z|
+          yield File.new(io, z)
+        end
+      rescue Zip::Error
+        yield File.new(io, nil)
+      end
+    end
+
     # Open a zip file by path or URI.
     def self.open(uri)
-      Kernel::open(uri) do |f|
-        begin
-          Zip::File.open_buffer(f) do |zf|
-            yield File.new(f, zf)
-          end
-        rescue Zip::Error
-          yield File.new(f, nil)
+      Kernel::open(uri) do |io|
+        open_io(io) do |file|
+          yield file
         end
       end
     end
@@ -34,7 +41,7 @@ module HTML5ZipFile
     #
     # - +:size+:: maximum zip file size
     # - +:entry_count+:: maximum number of entries (files and directories)
-    # - +:file_count+:: maximum number of files
+    # - +:file_count+:: maximum number of file
     # - +:directory_count+:: maximum number of directories
     # - +:path_length+:: maximum path length in characters
     # - +:path_components+:: maximum number of path components
