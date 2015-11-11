@@ -4,20 +4,6 @@ require 'byebug'
 
 module HTML5ZipFile
   class FileTest < Minitest::Test
-    def test_open_io
-      ::File.open('test/data/test-ad.zip') do |f|
-        File.open_io(f) do |z|
-          assert z
-        end
-      end
-    end
-
-    def test_invalid_path
-      assert_raises(Errno::ENOENT) do
-        File.open('test/data/missing.zip') { |f| f }
-      end
-    end
-
     def test_validate_valid_zip
       File.open('test/data/test-ad.zip') do |f|
         assert f.validate
@@ -31,16 +17,16 @@ module HTML5ZipFile
       end
     end
 
-    def test_validate_valid_size
+    def test_validate_valid_contents__size
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:size => 1_000_000)
+        assert f.validate(:contents_size => 20_000_000)
       end
     end
 
-    def test_validate_invalid_size
+    def test_validate_invalid_contents_size
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:size => 100_000)
-        assert_equal [:size], f.failures
+        refute f.validate(:contents_size => 100_000)
+        assert_equal [:contents_size], f.failures
       end
     end
 
@@ -158,12 +144,6 @@ module HTML5ZipFile
       File.open('test/data/invalid.zip') do |f|
         refute f.validate(:entry_count => 6, :file_count => 2)
         assert_equal [:zip], f.failures
-      end
-    end
-
-    def test_size
-      File.open('test/data/test-ad.zip') do |f|
-        assert_equal 729889, f.size
       end
     end
 

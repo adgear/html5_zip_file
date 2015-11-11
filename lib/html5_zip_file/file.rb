@@ -1,45 +1,29 @@
 require 'fileutils'
 require 'nokogiri'
-require 'open-uri'
 require 'pathname'
 require 'zip'
 
 module HTML5ZipFile
   class File
-    # Zip file size.
-    attr_reader :size
-
     # Array of validation failure keywords.
     attr_reader :failures
 
-    # Open a zip file from an +IO+ object.
-    def self.open_io(io)
-      begin
-        Zip::File.open_buffer(io) do |z|
-          yield File.new(io, z)
-        end
-      rescue Zip::Error
-        yield File.new(io, nil)
+    # Open a zip file by path.
+    def self.open(file_name)
+      Zip::File.open(file_name, 0) do |z|
+        yield File.new(z)
       end
+    rescue Zip::Error
+      yield File.new(nil)
     end
 
-    # Open a zip file by path or URI.
-    def self.open(uri)
-      Kernel::open(uri) do |io|
-        open_io(io) do |file|
-          yield file
-        end
-      end
-    end
-
-    def initialize(file, zip) # :nodoc:
-      @size = file.size
+    def initialize(zip) # :nodoc:
       @zip = zip
     end
 
     # Validate zip file with options:
     #
-    # - +:size+:: maximum zip file size
+    # - +:contents_size+:: maximum contents size
     # - +:entry_count+:: maximum number of entries (files and directories)
     # - +:file_count+:: maximum number of file
     # - +:directory_count+:: maximum number of directories
@@ -60,8 +44,8 @@ module HTML5ZipFile
         return false
       end
 
-      if options.has_key? :size
-        @failures << :size unless is_valid_size? options[:size]
+      if options.has_key? :contents_size
+        @failures << :contents_size unless is_valid_contents_size? options[:contents_size]
       end
 
       if options.has_key? :entry_count
@@ -190,8 +174,8 @@ module HTML5ZipFile
       !!@zip
     end
 
-    def is_valid_size?(max)
-      @size <= max
+    def is_valid_contents_size?(max)
+      contents_size <= max
     end
 
     def is_valid_entry_count?(max)
