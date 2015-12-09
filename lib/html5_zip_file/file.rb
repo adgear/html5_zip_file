@@ -1,219 +1,243 @@
-require 'fileutils'
-require 'nokogiri'
+require 'rubygems'
+
 require 'pathname'
-require 'zip'
+
+require 'html5_zip_file/zip_unpack'
 
 module HTML5ZipFile
+
+  Error = Class.new(StandardError)
+
+  DestinationException  = Class.new(Error)
+  InexistentException = Class.new(DestinationException)
+  NotEmptyException = Class.new(DestinationException)
+
   class File
-    # Array of validation failure keywords.
+
+    private_class_method :new
+
+    # Instantiate an {File} object and yield it to a block supplied by
+    # the caller.
+    #
+    # Within the block, you can call {#validate} and {#unpack} on the
+    # object.
+    #
+    # You can also call {#corrupt?}, {#size_packed}, {#size_unpacked},
+    # {#entries}, {#file_entries}, {#directory_entries} and
+    # {#html_file_entries}.
+    #
+    # Note: if corruption is detected, an {File} object is
+    # still yielded to the block, but its {#validate} method always
+    # returns false.
+    #
+    # @param [String] file_name file name of zip file
+    #
+    # @yieldparam f [HTML5ZipFile::File]
+    # @return [void]
+    #
+    # @example Validate and unpack a zip file
+    #
+    #  require 'html5_zip_file'
+    #  require 'tmpdir'
+    #
+    #  ZipUnpack::ZipFile.set_log_level Logger::WARN
+    #
+    #  HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #    puts
+    #    puts 'size_unpacked:'
+    #    puts f.size_unpacked
+    #    puts
+    #    puts 'entries:'
+    #    f.entries.each { |e| puts(e.inspect()) }
+    #    puts
+    #
+    #    if f.validate( :size_unpacked => 700000,
+    #                   :file_count => 3,
+    #                   :path_length => 14,
+    #                   :contains_html_file => false )
+    #
+    #      puts 'Passed validation checks.'
+    #      Dir.mktmpdir("HTML5ZipFile_extract_") do |dir|
+    #        f.unpack(dir)
+    #      end
+    #
+    #    else
+    #
+    #      if f.failures.include? :zip
+    #        puts 'File is not a valid zip file.'
+    #      end
+    #
+    #      puts 'Failed validation checks: '
+    #      f.failures.each { |failure|  puts(failure) }
+    #
+    #    end
+    #
+    #  end  #=> nil
+
+    def self.open(file_name)
+      yield new(ZipUnpack::InfoZipFile.new(file_name))
+      return nil
+    rescue ZipUnpack::CorruptZipFileError => e
+      yield new(ZipUnpack::CorruptFile.new)
+      return nil
+    end
+
+    # Failures detected by the last invocation of {#validate}
+    #
+    # @return [Array] validation failure keywords
     attr_reader :failures
 
-    # Open a zip file by path.
-    def self.open(file_name)
-      Zip::File.open(file_name, 0) do |z|
-        yield File.new(z)
-      end
-    rescue Zip::Error
-      yield File.new(nil)
-    end
+    # Validate zip file
+    #
+    # If the zip file is corrupt, {#failures} will contain :zip.
+    #
+    # If any validation checks fail, their keys will be in {#failures}.
+    #
+    # @param [Hash] opts Presence of a key activates a particular check and value defines the threshold
+    #
+    # @option opts [Number] :size_packed maximum total size of packed zip file in bytes
+    # @option opts [Number] :size_unpacked maximum total size of unpacked contents in bytes
+    #
+    # @option opts [Number] :entry_count maximum number of files and directories
+    # @option opts [Number] :file_count maximum number of files
+    # @option opts [Number] :directory_count maximum number of directories
+    #
+    # @option opts [Number] :path_length maximum path length in characters
+    # @option opts [Number] :path_components maximum number of path components
+    #
+    # @option opts [Boolean] :contains_html_file require or disallow HTML files
+    #
+    # @return [Boolean] false if the zip file is corrupt or if any validation checks fail
 
-    def initialize(zip) # :nodoc:
-      @zip = zip
-    end
-
-    # Validate zip file with options:
-    #
-    # - +:contents_size+:: maximum contents size
-    # - +:entry_count+:: maximum number of entries (files and directories)
-    # - +:file_count+:: maximum number of file
-    # - +:directory_count+:: maximum number of directories
-    # - +:path_length+:: maximum path length in characters
-    # - +:path_components+:: maximum number of path components
-    # - +:contains_html_file+:: require or disallow HTML files to exist
-    # - +:contains_zip_file+:: require or disallow embedded zip files to exist
-    #
-    # Populates #failures with keywords of failed validations. If file is not
-    # a valid zip, #failures will contain +:zip+.
-    #
-    # Returns +true+ if validations passed.
-    def validate(options = {})
+    def validate(opts = {})
       @failures = []
 
-      unless is_valid_zip?
+      if corrupt?
         @failures << :zip
         return false
       end
 
-      if options.has_key? :contents_size
-        @failures << :contents_size unless is_valid_contents_size? options[:contents_size]
+      if opts.has_key? :size_packed
+        @failures << :size_packed unless size_packed <= opts[:size_packed]
       end
 
-      if options.has_key? :entry_count
-        @failures << :entry_count unless is_valid_entry_count? options[:entry_count]
+      if opts.has_key? :size_unpacked
+        @failures << :size_unpacked unless size_unpacked <= opts[:size_unpacked]
       end
 
-      if options.has_key? :file_count
-        @failures << :file_count unless is_valid_file_count? options[:file_count]
+      if opts.has_key? :entry_count
+        @failures << :entry_count unless entries.length() <= opts[:entry_count]
+      end
+      if opts.has_key? :file_count
+        @failures << :file_count unless file_entries.size <= opts[:file_count]
+      end
+      if opts.has_key? :directory_count
+        @failures << :directory_count unless directory_entries.size <= opts[:directory_count]
       end
 
-      if options.has_key? :directory_count
-        @failures << :directory_count unless is_valid_directory_count? options[:directory_count]
+      if opts.has_key? :path_length
+        @failures << :path_length unless entries.all?{ |entry|
+          entry.name.size <= opts[:path_length]
+        }
+      end
+      if opts.has_key? :path_components
+        @failures << :path_components unless entries.all? { |entry|
+          components = []
+          Pathname.new(entry.name).each_filename{ |c| components << c }
+          components.count <= opts[:path_components]
+        }
       end
 
-      if options.has_key? :path_length
-        @failures << :path_length unless is_valid_path_length? options[:path_length]
-      end
-
-      if options.has_key? :path_components
-        @failures << :path_components unless is_valid_path_components? options[:path_components]
-      end
-
-      if options.has_key? :contains_html_file
-        @failures << :contains_html_file unless contains_html_file? == options[:contains_html_file]
-      end
-
-      if options.has_key? :contains_zip_file
-        @failures << :contains_zip_file unless contains_zip_file? == options[:contains_zip_file]
+      if opts.has_key? :contains_html_file
+        @failures << :contains_html_file unless html_file_entries.any? == opts[:contains_html_file]
       end
 
       @failures.none?
     end
 
-    # Return total size of zip file contents.
-    def contents_size
-      @contents_size ||= file_entries.map(&:size).reduce(0, :+)
+    # Unpack the zip file to destination
+    #
+    # @param [String] destination path to an empty directory
+    # @param [Boolean] sandbox perform the unzip operation in a filesystem sandbox (requires Linux Kernel version 3.8+)
+    #
+    # @return [void]
+    #
+    # @raise [SOMEERROR] if extracted contents do not match metadata
+    # @raise [DestinationException] if directory does not exist or is not empty
+    #
+    # @todo implement SOMEERROR
+    # @todo implement sandbox
+
+    def unpack(destination, sandbox=false)
+      raise NotImplementedError if sandbox == true
+
+      #raise InexistentException if !Dir.exists?(destination)
+
+      # @deprecated ruby 1.8.7 compat
+      begin
+        Dir.new(destination)
+      rescue SystemCallError
+        raise InexistentException
+      end
+
+
+      raise NotEmptyException, "Directory not empty (#{destination})." if Dir.entries(destination).size > 2
+      @zip_file.unpack(destination)
     end
 
-    # Return all entries.
+    # @return [Boolean] total size of packed zip file in bytes
+
+    def corrupt?
+      @zip_file.class == ZipUnpack::CorruptFile
+    end
+
+    # @return [Number] total size of packed zip file in bytes
+
+    def size_packed
+      @zip_file.size_packed
+    end
+
+    # @return [Number] total size of unpacked contents in bytes
+
+    def size_unpacked
+      @size_unpacked ||= (file_entries.size > 0) ? file_entries.map(){|entry| entry.size}.reduce(:+) : 0
+    end
+
+    # @return [Array<ZipUnpack::Entry>] files and directories in the zip file
+
     def entries
-      @zip.entries
+      @zip_file.entries
     end
 
-    # Return file entries.
+    # @return [Array<ZipUnpack::Entry>] files in the zip file
+
     def file_entries
-      @file_entries ||= @zip.select do |entry|
+      @file_entries ||= entries.select do |entry|
         entry.ftype == :file
       end
     end
 
-    # Return directory entries.
+    # @return [Array<ZipUnpack::Entry>] directories in the zip file
+
     def directory_entries
-      @directory_entries ||= @zip.select do |entry|
+      @directory_entries ||= entries.select do |entry|
         entry.ftype == :directory
       end
     end
 
-    # Return HTML file entries.
+    # @return [Array<ZipUnpack::Entry>] html files in the zip file
+
     def html_file_entries
       @html_file_entries ||= file_entries.select do |entry|
         entry.name =~ /\.html?\z/i
       end
     end
 
-    # Unpack the zip file to +dest+, which must either be an empty directory
-    # or not exist.
-    #
-    # If the destination is not empty, raises #DestinationNotEmpty.
-    def unpack(dest)
-      exists = Dir.exists?(dest)
-      if exists && Dir.entries(dest).size > 2
-        raise DestinationNotEmpty, 'Destination directory is not empty'
-      end
-      FileUtils.mkdir_p(dest) unless exists
-
-      @unpack_dest = dest
-
-      @zip.each do |entry|
-        entry.extract(::File.join(dest, entry.name))
-      end
-    end
-
-    # Destroy previously unpacked contents.
-    def destroy_unpacked
-      return unless @unpack_dest && Dir.exists?(@unpack_dest)
-      FileUtils.remove_entry_secure(@unpack_dest, :force => true)
-      @unpack_dest = nil
-    end
-
-    # Inject a script tag into alll unpacked HTML files, replacing any
-    # previously injected script tag.
-    #
-    # Raises #NotUnpacked if #unpack has not been called.
-    # Raises #InvalidScriptTag if +script_tag+ does not contain a valid tag.
-    def inject_script_tag(script_tag)
-      raise NotUnpacked, 'Zip file not unpacked' unless @unpack_dest
-
-      html_file_entries.each do |entry|
-        path = ::File.join(@unpack_dest, entry.name)
-
-        data = ::File.read(path)
-        html = Nokogiri::HTML.parse("<!DOCTYPE html>\n" + data)
-
-        script_fragment = Nokogiri::HTML.fragment(script_tag)
-        tag = script_fragment.at_css('script')
-        raise InvalidScriptTag, 'Script tag missing' unless tag
-        tag['data-adgear-html5'] = 'true'
-
-        if existing_tag = html.at_css('script[data-adgear-html5="true"]')
-          existing_tag.replace(tag)
-        elsif head_tag = html.at_css('head')
-          head_tag.prepend_child(tag)
-        elsif html_tag = html.at_css('html')
-          html_tag.prepend_child(tag)
-        else
-          html.prepend_child(tag)
-        end
-
-        ::File.write(path, html.to_s)
-      end
-    end
-
     private
 
-    def is_valid_zip?
-      !!@zip
+    def initialize(zip_file)
+      @zip_file = zip_file
     end
 
-    def is_valid_contents_size?(max)
-      contents_size <= max
-    end
-
-    def is_valid_entry_count?(max)
-      @zip.size <= max
-    end
-
-    def is_valid_file_count?(max)
-      file_entries.size <= max
-    end
-
-    def is_valid_directory_count?(max)
-      directory_entries.size <= max
-    end
-
-    def is_valid_path_length?(max)
-      @zip.all? do |entry|
-        entry.name.size <= max
-      end
-    end
-
-    def is_valid_path_components?(max)
-      @zip.all? do |entry|
-        Pathname.new(entry.name).each_filename.count <= max
-      end
-    end
-
-    def contains_html_file?
-      html_file_entries.any?
-    end
-
-    def contains_zip_file?
-      zip_file_entries.any?
-    end
-
-    def zip_file_entries
-      @zip_file_entries ||= file_entries.select do |entry|
-        entry.name =~ /\.zip\z/i
-      end
-    end
   end
 end

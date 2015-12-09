@@ -1,97 +1,240 @@
 # Html5ZipFile
 
-HTML 5 zip file validation, unpacking and manipulation.
+HTML 5 zip file validation and unpacking.
 
-## Installation
 
-Add this line to your application's Gemfile:
+## Install for development
 
-```ruby
-gem 'html5_zip_file'
-```
+Perform development with the current version of ruby (2.2.3).
 
-And then execute:
+Check out the code:
 
-    $ bundle
+    git clone git@github.com:adgear/html5_zip_file.git
 
-Or install it yourself as:
+Install dependencies directly (without building a gem):
 
-    $ gem install html5_zip_file
+    $ gem install bundler
+    $ bundle install
+
+Run tests:
+
+    $ bundle exec rake test
+    $ bundle exec ruby -I test test/file_test.rb -n /.*validate_valid_zip.*/
+
+Experiment with the console:
+
+    $ bundle exec rake console
+    irb(main):001:0> HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    irb(main):002:1*
+    irb(main):003:1* file_valid = f.validate( :unpacked_size => 700000 )
+    irb(main):004:1>
+    irb(main):005:1*   if file_valid
+    irb(main):006:2>     f.unpack('/tmp/test_extract')
+    irb(main):007:2>   else
+    irb(main):008:2*     f.failures.each { |failure|  puts(failure) }
+    irb(main):009:2>   end
+    irb(main):010:1>
+    irb(main):011:1* end
+
+    Info-ZIP: found version UnZip 5.52
+    Info-ZIP: CRC check passed (test/data/test-ad.zip)
+    Info-ZIP: entries parsed (test/data/test-ad.zip)
+
+While developing, you could add testing code at the bottom of a file and run it:
+
+    $ bundle exec ruby lib/html5_zip_file/file.rb
+
+But try writing a doctest directly as a comment of the class/method, and executing it:
+
+    $ bundle exec yard doctest lib/html5_zip_file/file.rb
+
+This is an easy way to produce documentation. See [Docs / Doctests](#label-Docs+-2F+Doctests) for details.
+
+To run the test suite on ruby 1.8.7, build the html5_zip_file_1_8_7
+gem, install it under ruby 1.8.7 and run 'rake test'.
+
+
+## Install into an application
+
+Add the appropriate line to your application's Gemfile:
+
+    gem 'html5_zip_file', :git => 'git://github.com/adgear/html5_zip_file'
+
+    gem 'html5_zip_file_1_8_7', :git => 'git://github.com/adgear/html5_zip_file'
+
+Execute:
+
+    $ bundle install
+
+Integrate into your application:
+
+    require 'html5_zip_file'
+
+    HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+      ...
+    end
+
 
 ## Usage
 
-```ruby
-require 'html5_zip_file'
+For a more sophisticated example, examine the doctest of
+{HTML5ZipFile::File.open}, then run it:
 
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  # ...
-end
-```
+    $ bundle exec yard doctest lib/html5_zip_file/file.rb
 
-### Validation
+    # Running:
 
-The `validate` method validates the zip file itself as well as other options:
+    I, [2015-12-18T13:57:28.852135 #5871]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2015-12-18T13:57:28.861000 #5871]  INFO -- : Info-ZIP: CRC check passed (test/data/test-ad.zip)
+    I, [2015-12-18T13:57:28.864758 #5871]  INFO -- : Info-ZIP: entries parsed (test/data/test-ad.zip)
 
-- `:size`: maximum zip file size
-- `:entry_count`: maximum number of entries (files and directories)
-- `:file_count`: maximum number of files
-- `:directory_count`: maximum number of directories
-- `:path_length`: maximum path length in characters
-- `:path_components`: maximum number of path components
-- `:contains_html_file`: require or disallow HTML files to exist
-- `:contains_zip_file`: require or disallow embedded zip files to exist
+    size_unpacked:
+    732274
 
-If any validations failed, their keys will be in `failures` and `validate` will
-return false.
+    entries:
+    #<ZipUnpack::Entry:0x007fd0aa24cfc0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007fd0aa24cbb0 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007fd0aa24c7c8 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007fd0aa24c368 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007fd0aa24c200 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007fd0aa247f70 @ftype=:file, @name="foo/index2.html", @size=41>
 
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  unless f.validate(:path_length => 25)
-    if f.failures.include? :zip
-      puts 'File is not a valid zip'
-    elsif f.failures.include? :path_length
-      puts 'File contains paths exceeding maximum length'
-    end
-  end
-end
-```
+    Failed validation checks:
+    size_unpacked
+    file_count
+    path_length
+    contains_html_file
 
-### Unpack & destroy
+    Finished in 0.020836s, 47.9936 runs/s, 47.9936 assertions/s.
 
-The `unpack` method unpacks the zip file contents to a new or empty directory.
+    1 runs, 1 assertions, 0 failures, 0 errors, 0 skips
 
-The `destroy_unpacked` cleans up previously unpacked files.
+Try editing the doctest.
 
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  f.unpack('data')
-  f.destroy_unpacked
-end
-```
+Change the validation criteria in lib/html5_zip_file/file.rb:
 
-### Inject script tag
+    :size_unpacked => 740000, :file_count => 6, :path_length => 15, :contains_html_file => true
 
-The `inject_script_tag` method injects a script tag into all previously
-unpacked HTML files.
+And re-run it:
 
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  f.unpack('data')
-  f.inject_script_tag('<script src="example.js"></script>')
-end
-```
+    $ bundle exec yard doctest lib/html5_zip_file/file.rb
 
-## Development
+Also, try changing file_name from 'test-ad.zip' to 'invalid.zip'.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run
-`rake test` to run the tests. You can also run `bin/console` for an interactive
-prompt that will allow you to experiment.
+### Validate
 
-To install this gem onto your local machine, run `bundle exec rake install`. To
-release a new version, update the version number in `version.rb`, and then run
-`bundle exec rake release`, which will create a git tag for the version, push
-git commits and tags, and push the `.gem` file to
-[rubygems.org](https://rubygems.org).
+See {HTML5ZipFile::File#validate}.
+
+
+### Unpack
+
+See {HTML5ZipFile::File#unpack}.
+
+
+## Gems
+
+Separate gemspecs are maintained for 'current' ruby and ruby 1.8.7.
+
+Current ruby has rubygems built-in.
+
+    $ chruby 2.2.3
+
+    $ gem build html5_zip_file.gemspec
+    Successfully built RubyGem
+    Name: html5_zip_file
+    Version: 1.0
+    File: html5_zip_file-1.0.gem
+
+    $ gem install [--dev] html5_zip_file-1.0.gem
+    Successfully installed html5_zip_file-1.0
+    Parsing documentation for html5_zip_file-1.0
+    Installing ri documentation for html5_zip_file-1.0
+    Done installing documentation for html5_zip_file after 0 seconds
+
+    $ gem which html5_zip_file
+    /Users/MYUSER/.gem/ruby/2.2.3/gems/html5_zip_file-1.0/lib/html5_zip_file.rb
+
+    $ irb
+    irb(main):001:0> require 'html5_zip_file'
+
+Ruby 1.8.7 does not have rubygems built-in: install rubygems 1.3.6
+manually.
+
+    $ chruby 1.8.7
+
+    $ gem --version
+    1.3.6
+
+    $ gem build html5_zip_file_1_8_7.gemspec
+    Successfully built RubyGem
+    Name: html5_zip_file_1_8_7
+    Version: 1.0
+    File: html5_zip_file_1_8_7-1.0.gem
+
+    $ gem install [--dev] html5_zip_file_1_8_7-1.0.gem
+    Successfully installed html5_zip_file_1_8_7-1.0
+    1 gem installed
+    Installing ri documentation for html5_zip_file_1_8_7-1.0...
+    Installing RDoc documentation for html5_zip_file_1_8_7-1.0...
+
+    $ gem which html5_zip_file
+    /Users/MYUSER/.gem/ruby/1.8.7/gems/html5_zip_file_1_8_7-1.0/lib/html5_zip_file.rb
+
+    $ irb
+    irb(main):001:0> require 'rubygems'
+    irb(main):002:0> require 'html5_zip_file'
+    irb(main):003:0> HTML5ZipFile::File
+    => HTML5ZipFile::File
+
+Note: if "gem install --dev" deadlocks, just install without --dev and
+"gem install X" the development gems manually.
+
+In theory, you could build gems, push them to a repository such as
+rubygems.org, and install them in your destination environment with
+"gem install XXX".
+
+
+## Docs / Doctests
+
+Note: the following don't work under ruby 1.8.7.  Use current ruby if
+you want to regenerate the documentation and run the doctests.
+
+http://yardoc.org
+
+https://github.com/p0deje/yard-doctest
+
+    build doc/
+
+    $ bundle exec yard doc
+
+    live preview:
+
+    $ bundle exec yard server --reload
+
+    filter:
+
+    $ bundle exec yard list --query '@todo'
+
+    graph:
+
+    $ bundle exec yard graph --full --dependencies | dot -Tpng -o outfile.png
+
+    $ bundle exec yard --help
+
+    $ bundle exec yard config load_plugins true
+
+    $ bundle exec yard config -a autoload_plugins yard-doctest
+
+    $ bundle exec yard doctest
+
+
+## Packaging Notes
+
+Subprocess and ZipUnpack are lumped into the html5_zip_file gem for
+convenience.
+
+They could be split into their own gems.
+
 
 ## Contributing
 

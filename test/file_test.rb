@@ -1,12 +1,18 @@
 require 'test_helper'
-require 'html5_zip_file/file'
-require 'byebug'
 
 module HTML5ZipFile
+
   class FileTest < Minitest::Test
+
+    def setup
+      ZipUnpack::ZipFile.set_log_level Logger::FATAL
+    end
+
     def test_validate_valid_zip
       File.open('test/data/test-ad.zip') do |f|
         assert f.validate
+        assert_empty f.failures
+        refute f.corrupt?
       end
     end
 
@@ -14,19 +20,42 @@ module HTML5ZipFile
       File.open('test/data/invalid.zip') do |f|
         refute f.validate
         assert_equal [:zip], f.failures
+
+        assert_nil f.unpack('test/empty_directory')
+
+        assert f.corrupt?
+        assert_equal f.size_packed, 0
+        assert_equal f.size_unpacked, 0
+        assert_equal f.entries, []
+        assert_equal f.file_entries, []
+        assert_equal f.directory_entries, []
+        assert_equal f.html_file_entries, []
       end
     end
 
-    def test_validate_valid_contents__size
+    def test_validate_valid_size_packed
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contents_size => 20_000_000)
+        assert f.validate(:size_packed => 20_000_000)
       end
     end
 
-    def test_validate_invalid_contents_size
+    def test_validate_invalid_size_packed
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:contents_size => 100_000)
-        assert_equal [:contents_size], f.failures
+        refute f.validate(:size_packed => 100_000)
+        assert_equal [:size_packed], f.failures
+      end
+    end
+
+    def test_validate_valid_size_unpacked
+      File.open('test/data/test-ad.zip') do |f|
+        assert f.validate(:size_unpacked => 20_000_000)
+      end
+    end
+
+    def test_validate_invalid_size_unpacked
+      File.open('test/data/test-ad.zip') do |f|
+        refute f.validate(:size_unpacked => 100_000)
+        assert_equal [:size_unpacked], f.failures
       end
     end
 
@@ -108,30 +137,16 @@ module HTML5ZipFile
       end
     end
 
-    def test_validate_valid_contains_zip_file
-      File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contains_zip_file => false)
-      end
-    end
-
-    def test_validate_invalid_contains_zip_file
-      File.open('test/data/test-ad-with-zip.zip') do |f|
-        refute f.validate(:contains_zip_file => false)
-        assert_equal [:contains_zip_file], f.failures
-      end
-    end
-
     def test_validate_mixed
       File.open('test/data/test-ad.zip') do |f|
         valid = f.validate(
-          :size => 1_000_000,
+          :size_unpacked => 1_000_000,
           :entry_count => 6,
           :file_count => 2,
           :directory_count => 2,
           :path_length => 10,
           :path_components => 5,
-          :contains_html_file => true,
-          :contains_zip_file => false
+          :contains_html_file => true
         )
         refute valid
         assert_equal 2, f.failures.size
@@ -147,9 +162,53 @@ module HTML5ZipFile
       end
     end
 
-    def test_contents_size
+    def test_unpack_bad_destinations
       File.open('test/data/test-ad.zip') do |f|
-        assert_equal 732274, f.contents_size
+        assert_raises(InexistentException) do
+          f.unpack('test/data/this/directory_does_not_exist')
+        end
+        assert_raises(NotEmptyException) do
+          f.unpack('test/unpack_non_empty')
+        end
+      end
+    end
+
+    def test_unpack_empty
+      File.open('test/data/test-ad.zip') do |f|
+
+        require 'tmpdir'
+        Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|
+          f.unpack(d)
+          entries = Dir.entries(d)
+          assert_equal 5, entries.size
+          assert_includes entries, 'index.html'
+          assert_includes entries, 'images'
+          assert_includes entries, 'foo'
+
+          entries = Dir.entries(d+'/images')
+          assert_equal 3, entries.size
+          assert_includes entries, 'test.png'
+
+          entries = Dir.entries(d+'/foo')
+          assert_equal 4, entries.size
+          assert_includes entries, 'index.html'
+          assert_includes entries, 'index2.html'
+        end
+
+      end
+    end
+
+    # $  stat -f%z test/data/test-ad.zip
+    # 729889
+    def test_size_packed
+      File.open('test/data/test-ad.zip') do |f|
+        assert_equal 729889, f.size_packed
+      end
+    end
+
+    def test_size_unpacked
+      File.open('test/data/test-ad.zip') do |f|
+        assert_equal 732274, f.size_unpacked
       end
     end
 
@@ -162,12 +221,19 @@ module HTML5ZipFile
     def test_file_entries
       File.open('test/data/test-ad.zip') do |f|
         assert_equal 4, f.file_entries.size
+        f.file_entries.each do |e|
+          assert e.ftype == :file
+        end
       end
     end
 
     def test_directory_entries
       File.open('test/data/test-ad.zip') do |f|
         assert_equal 2, f.directory_entries.size
+        f.directory_entries.each do |e|
+          assert e.ftype == :directory
+          assert e.size == 0
+        end
       end
     end
 
@@ -177,124 +243,5 @@ module HTML5ZipFile
       end
     end
 
-    class Unpack < Minitest::Test
-      def teardown
-        FileUtils.rm_rf('test/unpack')
-      end
-
-      def test_unpack_non_empty
-        assert_raises(DestinationNotEmpty) do
-          File.open('test/data/test-ad.zip') do |f|
-            f.unpack('test/unpack_non_empty')
-          end
-        end
-      end
-
-      def test_unpack_empty
-        FileUtils.mkdir_p('test/unpack')
-
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-
-          entries = Dir.entries('test/unpack')
-          assert_equal 5, entries.size
-          assert_includes entries, 'index.html'
-          assert_includes entries, 'images'
-          assert_includes entries, 'foo'
-
-          entries = Dir.entries('test/unpack/images')
-          assert_equal 3, entries.size
-          assert_includes entries, 'test.png'
-
-          entries = Dir.entries('test/unpack/foo')
-          assert_equal 4, entries.size
-          assert_includes entries, 'index.html'
-          assert_includes entries, 'index2.html'
-        end
-      end
-
-      def test_unpack_mkdir
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-
-          entries = Dir.entries('test/unpack')
-          assert_equal 5, entries.size
-          assert_includes entries, 'index.html'
-          assert_includes entries, 'images'
-          assert_includes entries, 'foo'
-
-          entries = Dir.entries('test/unpack/images')
-          assert_equal 3, entries.size
-          assert_includes entries, 'test.png'
-
-          entries = Dir.entries('test/unpack/foo')
-          assert_equal 4, entries.size
-          assert_includes entries, 'index.html'
-          assert_includes entries, 'index2.html'
-        end
-      end
-
-      def test_destroy_unpacked
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.destroy_unpacked
-
-          refute Dir.exists?('test/unpack')
-        end
-      end
-
-      def test_inject_script_tag_not_unpacked
-        assert_raises(NotUnpacked) do
-          File.open('test/data/test-ad.zip') do |f|
-            f.inject_script_tag('<script></script>')
-          end
-        end
-      end
-
-      def test_inject_script_tag_invalid
-        assert_raises(InvalidScriptTag) do
-          File.open('test/data/test-ad.zip') do |f|
-            f.unpack('test/unpack')
-            f.inject_script_tag('<div></div>')
-          end
-        end
-      end
-
-      def test_inject_script_tag
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.inject_script_tag('<script src="test.js"></script>')
-
-          data = ::File.read('test/unpack/index.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('head script[src="test.js"]')
-
-          data = ::File.read('test/unpack/foo/index.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('html script[src="test.js"]')
-
-          data = ::File.read('test/unpack/foo/index2.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('script[src="test.js"]')
-        end
-      end
-
-      def test_inject_script_tag_replace
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.inject_script_tag('<script src="a.js"></script>')
-          f.inject_script_tag('<script src="b.js"></script>')
-
-          data = ::File.read('test/unpack/index.html')
-          html = Nokogiri::HTML.parse(data)
-
-          assert html.at_css('script[src="b.js"]')
-          refute html.at_css('script[src="a.js"]')
-        end
-      end
-    end
   end
 end
