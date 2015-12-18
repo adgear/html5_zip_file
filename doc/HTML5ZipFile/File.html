@@ -1,0 +1,1495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: HTML5ZipFile::File
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!HTML5ZipFile/File.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (F)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../HTML5ZipFile.html" title="HTML5ZipFile (module)">HTML5ZipFile</a></span></span>
+     &raquo; 
+    <span class="title">File</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: HTML5ZipFile::File
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">HTML5ZipFile::File</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/html5_zip_file/file.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#failures-instance_method" title="#failures (instance method)">- (Array) <strong>failures</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Failures detected by the last invocation of <span class='object_link'><a href="#validate-instance_method" title="HTML5ZipFile::File#validate (method)">#validate</a></span>.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#open-class_method" title="open (class method)">+ (void) <strong>open</strong>(file_name) {|f| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Instantiate an <span class='object_link'><a href="" title="HTML5ZipFile::File (class)">File</a></span> object and yield it to a block supplied by the
+caller.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#corrupt%3F-instance_method" title="#corrupt? (instance method)">- (Boolean) <strong>corrupt?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Total size of packed zip file in bytes.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#directory_entries-instance_method" title="#directory_entries (instance method)">- (Array&lt;ZipUnpack::Entry&gt;) <strong>directory_entries</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Directories in the zip file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#entries-instance_method" title="#entries (instance method)">- (Array&lt;ZipUnpack::Entry&gt;) <strong>entries</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Files and directories in the zip file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#file_entries-instance_method" title="#file_entries (instance method)">- (Array&lt;ZipUnpack::Entry&gt;) <strong>file_entries</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Files in the zip file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#html_file_entries-instance_method" title="#html_file_entries (instance method)">- (Array&lt;ZipUnpack::Entry&gt;) <strong>html_file_entries</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Html files in the zip file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#size_packed-instance_method" title="#size_packed (instance method)">- (Number) <strong>size_packed</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Total size of packed zip file in bytes.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#size_unpacked-instance_method" title="#size_unpacked (instance method)">- (Number) <strong>size_unpacked</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Total size of unpacked contents in bytes.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unpack-instance_method" title="#unpack (instance method)">- (void) <strong>unpack</strong>(destination, sandbox = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Unpack the zip file to destination.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#validate-instance_method" title="#validate (instance method)">- (Boolean) <strong>validate</strong>(opts = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Validate zip file.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="failures-instance_method">
+  
+    - (<tt>Array</tt>) <strong>failures</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Failures detected by the last invocation of <span class='object_link'><a href="#validate-instance_method" title="HTML5ZipFile::File#validate (method)">#validate</a></span></p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>validation failure keywords</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 88</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_failures'>failures</span>
+  <span class='ivar'>@failures</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="open-class_method">
+  
+    + (<tt>void</tt>) <strong>open</strong>(file_name) {|f| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>Instantiate an <span class='object_link'><a href="" title="HTML5ZipFile::File (class)">HTML5ZipFile::File</a></span> object and yield it to a block supplied by the
+caller.</p>
+
+<p>Within the block, you can call <span class='object_link'><a href="#validate-instance_method" title="HTML5ZipFile::File#validate (method)">#validate</a></span> and <span class='object_link'><a href="#unpack-instance_method" title="HTML5ZipFile::File#unpack (method)">#unpack</a></span> on the object.</p>
+
+<p>You can also call <span class='object_link'><a href="#corrupt%3F-instance_method" title="HTML5ZipFile::File#corrupt? (method)">#corrupt?</a></span>, <span class='object_link'><a href="#size_packed-instance_method" title="HTML5ZipFile::File#size_packed (method)">#size_packed</a></span>, <span class='object_link'><a href="#size_unpacked-instance_method" title="HTML5ZipFile::File#size_unpacked (method)">#size_unpacked</a></span>,
+<span class='object_link'><a href="#entries-instance_method" title="HTML5ZipFile::File#entries (method)">#entries</a></span>, <span class='object_link'><a href="#file_entries-instance_method" title="HTML5ZipFile::File#file_entries (method)">#file_entries</a></span>, <span class='object_link'><a href="#directory_entries-instance_method" title="HTML5ZipFile::File#directory_entries (method)">#directory_entries</a></span> and <span class='object_link'><a href="#html_file_entries-instance_method" title="HTML5ZipFile::File#html_file_entries (method)">#html_file_entries</a></span>.</p>
+
+<p>Note: if corruption is detected, an <span class='object_link'><a href="" title="HTML5ZipFile::File (class)">HTML5ZipFile::File</a></span> object is still yielded to the
+block, but its <span class='object_link'><a href="#validate-instance_method" title="HTML5ZipFile::File#validate (method)">#validate</a></span> method always returns false.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Validate and unpack a zip file</p>
+</div></p>
+      
+      <pre class="example code"><code>
+<span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>html5_zip_file</span><span class='tstring_end'>&#39;</span></span>
+<span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tmpdir</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='const'>ZipUnpack</span><span class='op'>::</span><span class='const'>ZipFile</span><span class='period'>.</span><span class='id identifier rubyid_set_log_level'>set_log_level</span> <span class='const'>Logger</span><span class='op'>::</span><span class='const'>WARN</span>
+
+<span class='const'>HTML5ZipFile</span><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test/data/test-ad.zip</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span>
+  <span class='id identifier rubyid_puts'>puts</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>size_unpacked:</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_size_unpacked'>size_unpacked</span>
+  <span class='id identifier rubyid_puts'>puts</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>entries:</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_e'>e</span><span class='op'>|</span> <span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span><span class='lparen'>(</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_puts'>puts</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_validate'>validate</span><span class='lparen'>(</span> <span class='symbol'>:size_unpacked</span> <span class='op'>=&gt;</span> <span class='int'>700000</span><span class='comma'>,</span>
+                 <span class='symbol'>:file_count</span> <span class='op'>=&gt;</span> <span class='int'>3</span><span class='comma'>,</span>
+                 <span class='symbol'>:path_length</span> <span class='op'>=&gt;</span> <span class='int'>14</span><span class='comma'>,</span>
+                 <span class='symbol'>:contains_html_file</span> <span class='op'>=&gt;</span> <span class='kw'>false</span> <span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Passed validation checks.</span><span class='tstring_end'>&#39;</span></span>
+    <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_mktmpdir'>mktmpdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>HTML5ZipFile_extract_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_dir'>dir</span><span class='op'>|</span>
+      <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+  <span class='kw'>else</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_failures'>failures</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='symbol'>:zip</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>File is not a valid zip file.</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Failed validation checks: </span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_failures'>failures</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_failure'>failure</span><span class='op'>|</span>  <span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='id identifier rubyid_failure'>failure</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+
+  <span class='kw'>end</span>
+
+<span class='kw'>end</span>  <span class='comment'>#=&gt; nil</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>file_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>file name of zip file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>f</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="HTML5ZipFile::File (class)">HTML5ZipFile::File</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 77</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_file_name'>file_name</span><span class='rparen'>)</span>
+  <span class='kw'>yield</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>ZipUnpack</span><span class='op'>::</span><span class='const'>InfoZipFile</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_file_name'>file_name</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>nil</span>
+<span class='kw'>rescue</span> <span class='const'>ZipUnpack</span><span class='op'>::</span><span class='const'>CorruptZipFileError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+  <span class='kw'>yield</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>ZipUnpack</span><span class='op'>::</span><span class='const'>CorruptFile</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="corrupt?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>corrupt?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns total size of packed zip file in bytes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>total size of packed zip file in bytes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+190
+191
+192</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 190</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_corrupt?'>corrupt?</span>
+  <span class='ivar'>@zip_file</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>==</span> <span class='const'>ZipUnpack</span><span class='op'>::</span><span class='const'>CorruptFile</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="directory_entries-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>) <strong>directory_entries</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns directories in the zip file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>directories in the zip file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+222
+223
+224
+225
+226</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 222</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_directory_entries'>directory_entries</span>
+  <span class='ivar'>@directory_entries</span> <span class='op'>||=</span> <span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
+    <span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_ftype'>ftype</span> <span class='op'>==</span> <span class='symbol'>:directory</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="entries-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>) <strong>entries</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns files and directories in the zip file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>files and directories in the zip file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+208
+209
+210</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 208</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_entries'>entries</span>
+  <span class='ivar'>@zip_file</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="file_entries-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>) <strong>file_entries</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns files in the zip file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>files in the zip file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+214
+215
+216
+217
+218</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 214</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_file_entries'>file_entries</span>
+  <span class='ivar'>@file_entries</span> <span class='op'>||=</span> <span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
+    <span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_ftype'>ftype</span> <span class='op'>==</span> <span class='symbol'>:file</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="html_file_entries-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>) <strong>html_file_entries</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns html files in the zip file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../ZipUnpack/Entry.html" title="ZipUnpack::Entry (class)">ZipUnpack::Entry</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>html files in the zip file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+230
+231
+232
+233
+234</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 230</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_html_file_entries'>html_file_entries</span>
+  <span class='ivar'>@html_file_entries</span> <span class='op'>||=</span> <span class='id identifier rubyid_file_entries'>file_entries</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
+    <span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\.html?\z</span><span class='regexp_end'>/i</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="size_packed-instance_method">
+  
+    - (<tt>Number</tt>) <strong>size_packed</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns total size of packed zip file in bytes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Number</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>total size of packed zip file in bytes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+196
+197
+198</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 196</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_size_packed'>size_packed</span>
+  <span class='ivar'>@zip_file</span><span class='period'>.</span><span class='id identifier rubyid_size_packed'>size_packed</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="size_unpacked-instance_method">
+  
+    - (<tt>Number</tt>) <strong>size_unpacked</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns total size of unpacked contents in bytes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Number</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>total size of unpacked contents in bytes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+202
+203
+204</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 202</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_size_unpacked'>size_unpacked</span>
+  <span class='ivar'>@size_unpacked</span> <span class='op'>||=</span> <span class='lparen'>(</span><span class='id identifier rubyid_file_entries'>file_entries</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_file_entries'>file_entries</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='rparen'>)</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span> <span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='symbol'>:+</span><span class='rparen'>)</span> <span class='op'>:</span> <span class='int'>0</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="unpack-instance_method">
+  
+    - (<tt>void</tt>) <strong>unpack</strong>(destination, sandbox = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note todo">
+    <strong>TODO:</strong>
+    <div class='inline'>
+<p>implement SOMEERROR</p>
+</div>
+  </div>
+
+  <div class="note todo">
+    <strong>TODO:</strong>
+    <div class='inline'>
+<p>implement sandbox</p>
+</div>
+  </div>
+
+<p class="note returns_void">This method returns an undefined value.</p>
+<p>Unpack the zip file to destination</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>destination</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>path to an empty directory</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>sandbox</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>perform the unzip operation in a filesystem sandbox (requires Linux Kernel
+version 3.8+)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>SOMEERROR</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if extracted contents do not match metadata</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../HTML5ZipFile.html#DestinationException-constant" title="HTML5ZipFile::DestinationException (constant)">DestinationException</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if directory does not exist or is not empty</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 171</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='id identifier rubyid_destination'>destination</span><span class='comma'>,</span> <span class='id identifier rubyid_sandbox'>sandbox</span><span class='op'>=</span><span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotImplementedError</span> <span class='kw'>if</span> <span class='id identifier rubyid_sandbox'>sandbox</span> <span class='op'>==</span> <span class='kw'>true</span>
+
+  <span class='comment'>#raise InexistentException if !Dir.exists?(destination)
+</span>
+  <span class='comment'># @deprecated ruby 1.8.7 compat
+</span>  <span class='kw'>begin</span>
+    <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_destination'>destination</span><span class='rparen'>)</span>
+  <span class='kw'>rescue</span> <span class='const'>SystemCallError</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>InexistentException</span>
+  <span class='kw'>end</span>
+
+
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotEmptyException</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Directory not empty (</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_destination'>destination</span><span class='embexpr_end'>}</span><span class='tstring_content'>).</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lparen'>(</span><span class='id identifier rubyid_destination'>destination</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>2</span>
+  <span class='ivar'>@zip_file</span><span class='period'>.</span><span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='id identifier rubyid_destination'>destination</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="validate-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>validate</strong>(opts = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Validate zip file</p>
+
+<p>If the zip file is corrupt, <span class='object_link'><a href="#failures-instance_method" title="HTML5ZipFile::File#failures (method)">#failures</a></span> will contain :zip.</p>
+
+<p>If any validation checks fail, their keys will be in <span class='object_link'><a href="#failures-instance_method" title="HTML5ZipFile::File#failures (method)">#failures</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Presence of a key activates a particular check and value defines the
+threshold</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:size_packed</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum total size of packed zip file in bytes</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:size_unpacked</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum total size of unpacked contents in bytes</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:entry_count</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum number of files and directories</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:file_count</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum number of files</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:directory_count</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum number of directories</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:path_length</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum path length in characters</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:path_components</span>
+          <span class="type">(<tt>Number</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>maximum number of path components</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:contains_html_file</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>require or disallow HTML files</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>false if the zip file is corrupt or if any validation checks fail</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/html5_zip_file/file.rb', line 112</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_validate'>validate</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='ivar'>@failures</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_corrupt?'>corrupt?</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:zip</span>
+    <span class='kw'>return</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:size_packed</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:size_packed</span> <span class='kw'>unless</span> <span class='id identifier rubyid_size_packed'>size_packed</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:size_packed</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:size_unpacked</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:size_unpacked</span> <span class='kw'>unless</span> <span class='id identifier rubyid_size_unpacked'>size_unpacked</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:size_unpacked</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:entry_count</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:entry_count</span> <span class='kw'>unless</span> <span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='lparen'>(</span><span class='rparen'>)</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:entry_count</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:file_count</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:file_count</span> <span class='kw'>unless</span> <span class='id identifier rubyid_file_entries'>file_entries</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:file_count</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:directory_count</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:directory_count</span> <span class='kw'>unless</span> <span class='id identifier rubyid_directory_entries'>directory_entries</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:directory_count</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:path_length</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:path_length</span> <span class='kw'>unless</span> <span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
+      <span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:path_length</span><span class='rbracket'>]</span>
+    <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:path_components</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:path_components</span> <span class='kw'>unless</span> <span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
+      <span class='id identifier rubyid_components'>components</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+      <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_entry'>entry</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each_filename'>each_filename</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_components'>components</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_c'>c</span> <span class='rbrace'>}</span>
+      <span class='id identifier rubyid_components'>components</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:path_components</span><span class='rbracket'>]</span>
+    <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span> <span class='symbol'>:contains_html_file</span>
+    <span class='ivar'>@failures</span> <span class='op'>&lt;&lt;</span> <span class='symbol'>:contains_html_file</span> <span class='kw'>unless</span> <span class='id identifier rubyid_html_file_entries'>html_file_entries</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='op'>==</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:contains_html_file</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='ivar'>@failures</span><span class='period'>.</span><span class='id identifier rubyid_none?'>none?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Fri Dec 18 18:00:05 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.2.3).
+</div>
+
+  </body>
+</html>
