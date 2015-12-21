@@ -16,6 +16,6 @@ git add .
 
 git commit -m "Deploy to GitHub Pages"
 
-git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages #> /dev/null 2>&1
+git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages > /dev/null 2>&1
 
 echo "git push exit code: ${?}"
