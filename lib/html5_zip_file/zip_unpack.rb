@@ -190,7 +190,7 @@ module ZipUnpack
       entry_lines.each do |entry_line|
         # 0          10-06-15 10:36    images/
         # 732059     10-03-15 21:58    images/test.png
-        if /^\s*(\d+)\s+\d{2}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+(.+)$/ =~ entry_line
+        if /^\s*(\d+)\s+\d+-\d+-\d+\s+\d+:\d+\s+(.+)$/ =~ entry_line
           entry_size = $1.to_i
           entry_name = $2
           if entry_name[-1,1] == '/'
