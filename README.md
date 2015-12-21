@@ -2,10 +2,18 @@
 
 HTML 5 zip file validation and unpacking.
 
+Project home: https://github.com/adgear/html5_zip_file
+
+Yard docs: https://adgear.github.io/html5_zip_file/frames.html
+
+Travis CI: https://travis-ci.org/adgear/html5_zip_file
+
+[![Build Status](https://travis-ci.org/adgear/html5_zip_file.svg?branch=ruby-1-8-7-compat)](https://travis-ci.org/adgear/html5_zip_file)
+
 
 ## Install for development
 
-Perform development with the current version of ruby (2.2.3).
+Perform development with the current version of ruby (2.2.2).
 
 Check out the code:
 
@@ -137,7 +145,7 @@ Separate gemspecs are maintained for 'current' ruby and ruby 1.8.7.
 
 Current ruby has rubygems built-in.
 
-    $ chruby 2.2.3
+    $ chruby 2.2.2
 
     $ gem build html5_zip_file.gemspec
     Successfully built RubyGem
@@ -152,7 +160,7 @@ Current ruby has rubygems built-in.
     Done installing documentation for html5_zip_file after 0 seconds
 
     $ gem which html5_zip_file
-    /Users/MYUSER/.gem/ruby/2.2.3/gems/html5_zip_file-1.0/lib/html5_zip_file.rb
+    /Users/MYUSER/.gem/ruby/2.2.2/gems/html5_zip_file-1.0/lib/html5_zip_file.rb
 
     $ irb
     irb(main):001:0> require 'html5_zip_file'
@@ -234,6 +242,27 @@ Subprocess and ZipUnpack are lumped into the html5_zip_file gem for
 convenience.
 
 They could be split into their own gems.
+
+
+## External Dependency Notes
+
+This gem has one external dependency: the command line program 'unzip'.
+
+http://www.info-zip.org/UnZip.html
+
+The test suite guarantees compabitibility with unzip v5.52 & v6.0.
+
+Versions currently provided by various distributions (2015-12-21):
+
+- OSX: 5.52 (2005)
+- Arch: 6.0-11 (4 fixes in 2015)
+- Gentoo: 6.0-r3 (1 change in 2015)
+- Debian: 6.0-16 (4 fixes in 2015)
+- Centos: 6.0-15
+
+If you use html5_zip_file in an application, you should run the test suite on a production machine, and "freeze" the unzip version in the OS's package manager.
+
+Any time the package manager wants to update unzip, "rake test" should be run first and the gem updated.
 
 
 ## Contributing
