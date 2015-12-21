@@ -75,8 +75,12 @@ module ZipUnpack
 
   class InfoZipFile < ZipFile
 
+    InfoZipError = Class.new(StandardError)
+    VersionException = Class.new(InfoZipError)
+    ParsingException = Class.new(InfoZipError)
+
     # Compatible Info-ZIP versions
-    VERSION_WHITELIST = ["UnZip 5.52"]#, "UnZip 6.0"]
+    VERSION_WHITELIST = ["UnZip 5.52", "UnZip 6.0"]
 
     def initialize(name)
       super()
