@@ -15,8 +15,9 @@ Gem::Specification.new do |s|
 
   s.require_paths = ['lib']
 
-  # built-in to ruby 2.2.2, but Travis CI requires it in the Gemfile
+  # built-in to ruby 2.2.2, but Travis CI still needs it in the Gemfile
   s.add_development_dependency 'rake'
+
   s.add_development_dependency 'minitest', '~> 5.8'
 
   s.add_development_dependency 'byebug'
