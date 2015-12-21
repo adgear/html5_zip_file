@@ -21,7 +21,10 @@ module HTML5ZipFile
         refute f.validate
         assert_equal [:zip], f.failures
 
-        assert_nil f.unpack('test/empty_directory')
+        require 'tmpdir'
+        Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|
+          assert_nil f.unpack(d)
+        end
 
         assert f.corrupt?
         assert_equal f.size_packed, 0
