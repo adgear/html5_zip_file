@@ -278,7 +278,7 @@ module HTML5ZipFile
     end
 
     def test_html_file_entries
-      File.open('test/data/test-ad-mixed-case-hTml.zip') do |f|
+      File.open('test/data/test-ad-mixed-case-hTmL.zip') do |f|
         assert_equal 6, f.html_file_entries.size
       end
     end
