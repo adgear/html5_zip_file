@@ -12,7 +12,6 @@ module HTML5ZipFile
       retval = File.open('test/data/test-ad.zip') do |f|
         assert f.validate
         assert_empty f.failures
-        refute f.corrupt?
       end
       assert_nil retval
     end
@@ -27,7 +26,6 @@ module HTML5ZipFile
           assert_nil f.unpack(d)
         end
 
-        assert f.corrupt?
         assert_equal f.size_packed, 0
         assert_equal f.size_unpacked, 0
         assert_equal f.entries, []
@@ -222,15 +220,6 @@ module HTML5ZipFile
           assert_includes entries, 'index2.html'
         end
 
-      end
-    end
-
-    def test_corrupt
-      File.open('test/data/invalid.zip') do |f|
-        assert f.corrupt?
-      end
-      File.open('test/data/test-ad.zip') do |f|
-        refute f.corrupt?
       end
     end
 

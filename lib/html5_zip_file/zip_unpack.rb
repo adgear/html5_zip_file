@@ -111,7 +111,7 @@ module ZipUnpack
       # sandbox here.
       exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
       if exit_code == 0
-        @@log.info "Info-ZIP: unpacked  succeeded"
+        @@log.info "Info-ZIP: unpacked succeeded"
         # Raise exception if result doesn't match what was in the manifest
       else
         self.class.log_debug_info(Logger::ERROR, exit_code, stdout, stderr)

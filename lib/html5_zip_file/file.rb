@@ -20,9 +20,8 @@ module HTML5ZipFile
     # Within the block, you can call {#validate} and {#unpack} on the
     # object.
     #
-    # You can also call {#corrupt?}, {#size_packed}, {#size_unpacked},
-    # {#entries}, {#file_entries}, {#directory_entries} and
-    # {#html_file_entries}.
+    # You can also call {#size_packed}, {#size_unpacked}, {#entries},
+    # {#file_entries}, {#directory_entries} and {#html_file_entries}.
     #
     # Note: if corruption is detected, an {File} object is
     # still yielded to the block, but its {#validate} method always
@@ -38,7 +37,7 @@ module HTML5ZipFile
     #  require 'html5_zip_file'
     #  require 'tmpdir'
     #
-    #  ZipUnpack::ZipFile.set_log_level Logger::WARN
+    #  ZipUnpack::ZipFile.set_log_level Logger::INFO
     #
     #  HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
     #    puts
@@ -182,12 +181,6 @@ module HTML5ZipFile
       @zip_file.unpack(destination)
     end
 
-    # @return [Boolean] total size of packed zip file in bytes
-
-    def corrupt?
-      @zip_file.class == ZipUnpack::CorruptFile
-    end
-
     # @return [Number] total size of packed zip file in bytes
 
     def size_packed
@@ -234,6 +227,10 @@ module HTML5ZipFile
 
     def initialize(zip_file)
       @zip_file = zip_file
+    end
+
+    def corrupt?
+      @zip_file.class == ZipUnpack::CorruptFile
     end
   end
 end
