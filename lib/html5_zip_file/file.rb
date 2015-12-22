@@ -5,7 +5,6 @@ require 'pathname'
 require 'html5_zip_file/zip_unpack'
 
 module HTML5ZipFile
-
   Error = Class.new(StandardError)
 
   DestinationException  = Class.new(Error)
@@ -13,7 +12,6 @@ module HTML5ZipFile
   NotEmptyException = Class.new(DestinationException)
 
   class File
-
     private_class_method :new
 
     # Instantiate an {File} object and yield it to a block supplied by
@@ -77,7 +75,7 @@ module HTML5ZipFile
     def self.open(file_name)
       yield new(ZipUnpack::InfoZipFile.new(file_name))
       return nil
-    rescue ZipUnpack::CorruptZipFileError => e
+    rescue ZipUnpack::CorruptZipFileError
       yield new(ZipUnpack::CorruptFile.new)
       return nil
     end
@@ -117,38 +115,38 @@ module HTML5ZipFile
         return false
       end
 
-      if opts.has_key? :size_packed
+      if opts.key? :size_packed
         @failures << :size_packed unless size_packed <= opts[:size_packed]
       end
 
-      if opts.has_key? :size_unpacked
+      if opts.key? :size_unpacked
         @failures << :size_unpacked unless size_unpacked <= opts[:size_unpacked]
       end
 
-      if opts.has_key? :entry_count
+      if opts.key? :entry_count
         @failures << :entry_count unless entries.size <= opts[:entry_count]
       end
-      if opts.has_key? :file_count
+      if opts.key? :file_count
         @failures << :file_count unless file_entries.size <= opts[:file_count]
       end
-      if opts.has_key? :directory_count
+      if opts.key? :directory_count
         @failures << :directory_count unless directory_entries.size <= opts[:directory_count]
       end
 
-      if opts.has_key? :path_length
-        @failures << :path_length unless entries.all?{ |entry|
+      if opts.key? :path_length
+        @failures << :path_length unless entries.all? do |entry|
           entry.name.size <= opts[:path_length]
-        }
+        end
       end
-      if opts.has_key? :path_components
-        @failures << :path_components unless entries.all? { |entry|
+      if opts.key? :path_components
+        @failures << :path_components unless entries.all? do |entry|
           components = []
-          Pathname.new(entry.name).each_filename{ |c| components << c }
+          Pathname.new(entry.name).each_filename { |c| components << c }
           components.count <= opts[:path_components]
-        }
+        end
       end
 
-      if opts.has_key? :contains_html_file
+      if opts.key? :contains_html_file
         @failures << :contains_html_file unless html_file_entries.any? == opts[:contains_html_file]
       end
 
@@ -168,10 +166,10 @@ module HTML5ZipFile
     # @todo implement SOMEERROR
     # @todo implement sandbox
 
-    def unpack(destination, sandbox=false)
-      raise NotImplementedError if sandbox == true
+    def unpack(destination, sandbox = false)
+      fail NotImplementedError if sandbox == true
 
-      #raise InexistentException if !Dir.exists?(destination)
+      # fail InexistentException if !Dir.exists?(destination)
 
       # @deprecated ruby 1.8.7 compat
       begin
@@ -180,8 +178,7 @@ module HTML5ZipFile
         raise InexistentException
       end
 
-
-      raise NotEmptyException, "Directory not empty (#{destination})." if Dir.entries(destination).size > 2
+      fail NotEmptyException, "Directory not empty (#{destination})." if Dir.entries(destination).size > 2
       @zip_file.unpack(destination)
     end
 
@@ -200,7 +197,7 @@ module HTML5ZipFile
     # @return [Number] total size of unpacked contents in bytes
 
     def size_unpacked
-      @size_unpacked ||= (file_entries.size > 0) ? file_entries.map(){|entry| entry.size}.reduce(:+) : 0
+      @size_unpacked ||= (file_entries.size > 0) ? file_entries.map(&:size).reduce(:+) : 0
     end
 
     # @return [Array<ZipUnpack::Entry>] files and directories in the zip file
@@ -238,6 +235,5 @@ module HTML5ZipFile
     def initialize(zip_file)
       @zip_file = zip_file
     end
-
   end
 end
