@@ -109,7 +109,7 @@ module HTML5ZipFile
     def validate(opts = {})
       @failures = []
 
-      if corrupt?
+      if @zip_file.class == ZipUnpack::CorruptFile
         @failures << :zip
         return false
       end
@@ -229,8 +229,5 @@ module HTML5ZipFile
       @zip_file = zip_file
     end
 
-    def corrupt?
-      @zip_file.class == ZipUnpack::CorruptFile
-    end
   end
 end
