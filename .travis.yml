@@ -6,6 +6,9 @@ matrix:
   include:
   - rvm: 2.2.2
     gemfile: Gemfile
+    script:
+      - bundle exec rake test
+      - bundle exec yard doctest
     after_success: "./build_docs.sh"
   - rvm: 1.8.7
     gemfile: Gemfile_1_8_7
