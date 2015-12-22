@@ -126,7 +126,7 @@ module HTML5ZipFile
       end
 
       if opts.has_key? :entry_count
-        @failures << :entry_count unless entries.length() <= opts[:entry_count]
+        @failures << :entry_count unless entries.size <= opts[:entry_count]
       end
       if opts.has_key? :file_count
         @failures << :file_count unless file_entries.size <= opts[:file_count]
