@@ -31,6 +31,7 @@ Run tests:
 
 Experiment with the console:
 
+    $ mkdir /tmp/test_extract
     $ bundle exec rake console
     irb(main):001:0> HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
     irb(main):002:1*
@@ -44,9 +45,11 @@ Experiment with the console:
     irb(main):010:1>
     irb(main):011:1* end
 
-    Info-ZIP: found version UnZip 5.52
-    Info-ZIP: CRC check passed (test/data/test-ad.zip)
-    Info-ZIP: entries parsed (test/data/test-ad.zip)
+    I, [2015-12-22T15:21:48.768047 #46401]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2015-12-22T15:21:48.782602 #46401]  INFO -- : Info-ZIP: CRC check passed (test/data/test-ad.zip)
+    I, [2015-12-22T15:21:48.799267 #46401]  INFO -- : Info-ZIP: entries parsed (test/data/test-ad.zip)
+    I, [2015-12-22T15:21:48.799566 #46401]  INFO -- : Info-ZIP: unpacking test/data/test-ad.zip to /tmp/test_extract
+    I, [2015-12-22T15:21:48.811629 #46401]  INFO -- : Info-ZIP: unpacked succeeded
 
 While developing, you could add testing code at the bottom of a file and run it:
 
