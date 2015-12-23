@@ -45,16 +45,10 @@
 #
 # === TODO
 #
-# Tests
-#
-# How might we do factories / stubs ?
-#
 # popen() should raise an exception if the child doesn't terminate
 # successfully, rather than returning incomplete or corrupt data.
-#
 
 class Subprocess
-
 
   SubprocessError = Class.new(StandardError)
 
@@ -62,9 +56,6 @@ class Subprocess
 
   Timeout = Class.new(SubprocessError)
   AbnormalTermination = Class.new(SubprocessError)
-end
-
-class Subprocess
 
   SUBPROCESS_TIMEOUT = 20 #seconds
   READ_CHUNK_SIZE = 512 #bytes
@@ -76,8 +67,12 @@ class Subprocess
     stdout = IO::pipe
     stderr = IO::pipe
 
-    pid = fork {
-      # child
+    child_pid = fork
+
+    if child_pid.nil?
+
+      # in the child
+
       stdin[1].close
       STDIN.reopen(stdin[0])
       stdin[0].close
@@ -96,26 +91,33 @@ class Subprocess
         # cannot simply re-raise an exception because it won't
         # reliable reach the parent process
         exit(240)
-        # @TODO, try to find a better way to propagate ENOENT to the parent
+        # @TODO, find a better way to propagate ENOENT to the parent
       end
-    }
 
-    stdin[0].close
-    stdout[1].close
-    stderr[1].close
+    else
 
-    stdin[1].close
+      # in the parent
 
-    stdout_contents, stderr_contents = collect_data(stdout[0], stderr[0])
+      stdin[0].close
+      stdout[1].close
+      stderr[1].close
 
-    Process.waitpid(pid)
+      stdin[1].close
 
-    exit_code = $?.exitstatus
-    if exit_code == 240
-      raise CommandNotFoundException, "Could not find the command #{args[0]}"
+      stdout_contents, stderr_contents = collect_data(stdout[0], stderr[0])
+
+      Process.wait(child_pid)
+
+      exit_code = $?.exitstatus
+      if exit_code == 240
+        raise CommandNotFoundException, "Could not find the command #{args[0]}"
+      end
+
+      return exit_code, stdout_contents, stderr_contents
+      # in the parent
+
+
     end
-
-    return exit_code, stdout_contents, stderr_contents
   end
 
   def self.collect_data(stdout, stderr)
