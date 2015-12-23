@@ -108,6 +108,9 @@ class Subprocess
 
       Process.wait(child_pid)
 
+      stdout[0].close
+      stderr[0].close
+
       exit_code = $?.exitstatus
       if exit_code == 240
         raise CommandNotFoundException, "Could not find the command #{args[0]}"
