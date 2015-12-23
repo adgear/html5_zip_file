@@ -129,7 +129,8 @@ module HTML5ZipFile
         @failures << :file_count unless file_entries.size <= opts[:file_count]
       end
       if opts.key? :directory_count
-        @failures << :directory_count unless directory_entries.size <= opts[:directory_count]
+        @failures << :directory_count unless
+          directory_entries.size <= opts[:directory_count]
       end
 
       if opts.key? :path_length
@@ -146,7 +147,8 @@ module HTML5ZipFile
       end
 
       if opts.key? :contains_html_file
-        @failures << :contains_html_file unless html_file_entries.any? == opts[:contains_html_file]
+        @failures << :contains_html_file unless
+          html_file_entries.any? == opts[:contains_html_file]
       end
 
       @failures.none?
@@ -155,7 +157,7 @@ module HTML5ZipFile
     # Unpack the zip file to destination
     #
     # @param [String] destination path to an empty directory
-    # @param [Boolean] sandbox perform the unzip operation in a filesystem sandbox (requires Linux Kernel version 3.8+)
+    # @param [Boolean] sandbox perform the unzip operation in a filesystem sandbox
     #
     # @return [void]
     #
@@ -169,7 +171,6 @@ module HTML5ZipFile
       fail NotImplementedError if sandbox == true
 
       # fail InexistentException if !Dir.exists?(destination)
-
       # @deprecated ruby 1.8.7 compat
       begin
         Dir.new(destination)
@@ -177,7 +178,9 @@ module HTML5ZipFile
         raise InexistentException
       end
 
-      fail NotEmptyException, "Directory not empty (#{destination})." if Dir.entries(destination).size > 2
+      fail NotEmptyException, "Directory not empty (#{destination})." if
+        Dir.entries(destination).size > 2
+
       @zip_file.unpack(destination)
     end
 

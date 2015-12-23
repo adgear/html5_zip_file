@@ -1,5 +1,7 @@
 require 'test_helper'
 
+require 'tmpdir'
+
 module HTML5ZipFile
 
   class FileTest < Minitest::Test
@@ -22,7 +24,7 @@ module HTML5ZipFile
         assert_equal [:zip], f.failures
 
         require 'tmpdir'
-        Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|
+        Dir.mktmpdir('HTML5ZipFile_extract_TEST_UNPACK_') do |d|
           assert_nil f.unpack(d)
         end
 
@@ -201,7 +203,6 @@ module HTML5ZipFile
     def test_unpack_good_destination
       File.open('test/data/test-ad.zip') do |f|
 
-        require 'tmpdir'
         Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|
           f.unpack(d)
           entries = Dir.entries(d)
