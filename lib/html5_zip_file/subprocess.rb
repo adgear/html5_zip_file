@@ -57,8 +57,14 @@ class Subprocess
   Timeout = Class.new(SubprocessError)
   AbnormalTermination = Class.new(SubprocessError)
 
+  SecurityLimitBreachedException = Class.new(SubprocessError)
+
   SUBPROCESS_TIMEOUT = 20 #seconds
-  READ_CHUNK_SIZE = 512 #bytes
+  READ_CHUNK_SIZE = 100 #bytes
+
+  # Maximum number of 100-byte chunks to read from a file descriptor
+  # before raising SecurityLimitBreachedException
+  MAX_CHUNKS = 1000
 
   def self.popen(*args)
     raise ArgumentError if args.class != Array || args.length < 2
@@ -124,6 +130,8 @@ class Subprocess
   end
 
   def self.collect_data(stdout, stderr)
+    o_chunks_read, e_chunks_read = 0, 0
+
     open_fds = [stdout, stderr]
     stdout_content, stderr_content = '', ''
     while !open_fds.empty?
@@ -131,6 +139,8 @@ class Subprocess
       raise Timeout if ready_fds.nil?
       if ready_fds[0].include?(stdout)
         begin
+          o_chunks_read += 1
+          raise SecurityLimitBreachedException if o_chunks_read > MAX_CHUNKS
           stdout_content << stdout.read_nonblock(READ_CHUNK_SIZE)
         rescue EOFError
           open_fds.delete_if{ |f| f == stdout}
@@ -138,6 +148,8 @@ class Subprocess
       end
       if ready_fds[0].include?(stderr)
         begin
+          e_chunks_read += 1
+          raise SecurityLimitBreachedException if e_chunks_read > MAX_CHUNKS
           stderr_content << stderr.read_nonblock(READ_CHUNK_SIZE)
         rescue EOFError
           open_fds.delete_if{ |f| f == stderr}
