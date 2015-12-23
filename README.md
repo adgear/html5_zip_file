@@ -45,11 +45,11 @@ Experiment with the console:
     irb(main):010:1>
     irb(main):011:1* end
 
-    I, [2015-12-22T15:21:48.768047 #46401]  INFO -- : Info-ZIP: found version UnZip 5.52
-    I, [2015-12-22T15:21:48.782602 #46401]  INFO -- : Info-ZIP: CRC check passed (test/data/test-ad.zip)
-    I, [2015-12-22T15:21:48.799267 #46401]  INFO -- : Info-ZIP: entries parsed (test/data/test-ad.zip)
-    I, [2015-12-22T15:21:48.799566 #46401]  INFO -- : Info-ZIP: unpacking test/data/test-ad.zip to /tmp/test_extract
-    I, [2015-12-22T15:21:48.811629 #46401]  INFO -- : Info-ZIP: unpacked succeeded
+    I, [2015-12-23T17:01:14.788303 #72989]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2015-12-23T17:01:14.802631 #72989]  INFO -- : Info-ZIP: CRC check passed
+    I, [2015-12-23T17:01:14.808715 #72989]  INFO -- : Info-ZIP: entries parsed
+    I, [2015-12-23T17:01:14.808924 #72989]  INFO -- : Info-ZIP: unpacking to /tmp/test_extract5
+    I, [2015-12-23T17:01:14.825811 #72989]  INFO -- : Info-ZIP: unpacked succeeded
 
 While developing, you could add testing code at the bottom of a file and run it:
 
@@ -91,32 +91,34 @@ Integrate into your application:
 For a more sophisticated example, examine the doctest of
 {HTML5ZipFile::File.open}, then run it:
 
-    $ bundle exec yard doctest lib/html5_zip_file/file.rb
+    $ bundle exec yard doctest
+    Run options: --seed 27241
 
     # Running:
 
-    I, [2015-12-18T13:57:28.852135 #5871]  INFO -- : Info-ZIP: found version UnZip 5.52
-    I, [2015-12-18T13:57:28.861000 #5871]  INFO -- : Info-ZIP: CRC check passed (test/data/test-ad.zip)
-    I, [2015-12-18T13:57:28.864758 #5871]  INFO -- : Info-ZIP: entries parsed (test/data/test-ad.zip)
+    I, [2015-12-23T17:02:57.023388 #73007]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2015-12-23T17:02:57.032418 #73007]  INFO -- : Info-ZIP: CRC check passed
+    I, [2015-12-23T17:02:57.036838 #73007]  INFO -- : Info-ZIP: entries parsed
 
     size_unpacked:
     732274
 
     entries:
-    #<ZipUnpack::Entry:0x007fd0aa24cfc0 @ftype=:file, @name="index.html", @size=112>
-    #<ZipUnpack::Entry:0x007fd0aa24cbb0 @ftype=:directory, @name="images/", @size=0>
-    #<ZipUnpack::Entry:0x007fd0aa24c7c8 @ftype=:file, @name="images/test.png", @size=732059>
-    #<ZipUnpack::Entry:0x007fd0aa24c368 @ftype=:directory, @name="foo/", @size=0>
-    #<ZipUnpack::Entry:0x007fd0aa24c200 @ftype=:file, @name="foo/index.html", @size=62>
-    #<ZipUnpack::Entry:0x007fd0aa247f70 @ftype=:file, @name="foo/index2.html", @size=41>
+    #<ZipUnpack::Entry:0x007fd6f3874188 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007fd6f386fea8 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007fd6f386f980 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007fd6f386f750 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007fd6f386f480 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007fd6f386f048 @ftype=:file, @name="foo/index2.html", @size=41>
 
     Failed validation checks:
     size_unpacked
     file_count
     path_length
     contains_html_file
+    .
 
-    Finished in 0.020836s, 47.9936 runs/s, 47.9936 assertions/s.
+    Finished in 0.025196s, 39.6888 runs/s, 39.6888 assertions/s.
 
     1 runs, 1 assertions, 0 failures, 0 errors, 0 skips
 

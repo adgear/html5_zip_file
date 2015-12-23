@@ -113,7 +113,7 @@ module ZipUnpack
       exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
       fail CorruptZipFileError, "Unzip failed" if exit_code != 0
 
-      @@log.info "Info-ZIP: unpacked succeeded"
+      @@log.info "Info-ZIP: unpack succeeded"
     end
 
     private

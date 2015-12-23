@@ -161,10 +161,8 @@ module HTML5ZipFile
     #
     # @return [void]
     #
-    # @raise [SOMEERROR] if extracted contents do not match metadata
     # @raise [DestinationException] if directory does not exist or is not empty
     #
-    # @todo implement SOMEERROR
     # @todo implement sandbox
 
     def unpack(destination, sandbox = false)
