@@ -10,8 +10,25 @@ module ZipUnpack
       ZipUnpack::ZipFile.set_log_level Logger::FATAL
     end
 
+    def f
+      InfoZipFile.new('test/data/test-ad.zip')
+    end
+
+    # $ stat -f%z test/data/test-ad.zip
+    # 729889
+    def test_size_packed
+      assert_equal 729_889, f.size_packed
+    end
+
+    def test_unpack
+      Dir.mktmpdir do |d|
+        f.unpack(d)
+        assert_equal 5, Dir.new(d).entries.size
+      end
+    end
+
     def test_get_infozip_version
-      assert_includes InfoZipFile::VERSION_WHITELIST, InfoZipFile.get_infozip_version
+      assert_includes InfoZipFile::VERSION_WHITELIST, f.send(:get_infozip_version)
     end
 
     def test_parse_infozip_version
@@ -19,19 +36,19 @@ module ZipUnpack
       debian_6_00 = 'UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.\n\nLatest sources and'
       bad_version = 'UnZip 3.00 of 20 April 1945, by StrangeDistro. Original by Info-ZIP.\n\nLatest sources and.'
 
-      assert_equal 'UnZip 5.52', InfoZipFile.parse_infozip_version(osx_5_52)
-      assert_equal 'UnZip 6.0', InfoZipFile.parse_infozip_version(debian_6_00)
-      assert_equal false, InfoZipFile.parse_infozip_version(bad_version)
+      assert_equal 'UnZip 5.52', f.send(:parse_infozip_version, osx_5_52)
+      assert_equal 'UnZip 6.0', f.send(:parse_infozip_version, debian_6_00)
+      assert_equal false, f.send(:parse_infozip_version, bad_version)
     end
 
     def test_crc_valid?
-      assert InfoZipFile.crc_valid?('test/data/test-ad.zip')
-      refute InfoZipFile.crc_valid?('test/data/invalid.zip')
+      assert f.send(:crc_valid?, 'test/data/test-ad.zip')
+      refute f.send(:crc_valid?, 'test/data/invalid.zip')
     end
 
     def test_get_entries
-      assert_equal false, InfoZipFile.get_entries('test/data/invalid.zip')
-      assert_equal 6, InfoZipFile.get_entries('test/data/test-ad.zip').size
+      assert_equal false, f.send(:get_entries, 'test/data/invalid.zip')
+      assert_equal 6, f.send(:get_entries, 'test/data/test-ad.zip').size
     end
 
     def test_parse_entries
@@ -48,7 +65,7 @@ module ZipUnpack
          --------                   -------
            732274                   6 files
       EOS
-      entries = InfoZipFile.parse_entries(stdout).sort
+      entries = f.send(:parse_entries, stdout).sort
       assert_equal 6, entries.size
       assert_equal entries[4].name,'images/test.png'
     end
@@ -61,7 +78,7 @@ module ZipUnpack
          --------                   -------
       EOS
       assert_raises(InfoZipFile::ParsingException) do
-        InfoZipFile.parse_entries(stdout)
+        f.send(:parse_entries, stdout)
       end
     end
 
@@ -73,7 +90,7 @@ module ZipUnpack
          --------                   -------
                 0                   0 files
       EOS
-      entries = InfoZipFile.parse_entries(stdout).sort
+      entries = f.send(:parse_entries, stdout).sort
       assert_equal 0, entries.size
     end
 
@@ -93,7 +110,7 @@ module ZipUnpack
          --------                   -------
            732294                   6 files
       EOS
-      entries = InfoZipFile.parse_entries(stdout).sort
+      entries = f.send(:parse_entries, stdout).sort
 
       assert_equal 'foo/ file_with_leading_space.txt', entries[1].name
       assert_equal 'foo/file_without_extension', entries[2].name
@@ -115,7 +132,7 @@ module ZipUnpack
          --------                   -------
           9999999                   6 files
       EOS
-      entries = InfoZipFile.parse_entries(stdout).sort
+      entries = f.send(:parse_entries, stdout).sort
 
       assert_equal :file, entries[2].ftype
       assert_equal 'index.html', entries[2].name
@@ -133,25 +150,10 @@ module ZipUnpack
          --------                   -------
           9999999                   6 files
       EOS
-
       assert_raises(InfoZipFile::ParsingException) do
-        InfoZipFile.parse_entries(stdout)
+        f.send(:parse_entries, stdout)
       end
     end
 
-    # $ stat -f%z test/data/test-ad.zip
-    # 729889
-    def test_size_packed
-      f = InfoZipFile.new('test/data/test-ad.zip')
-      assert_equal 729_889, f.size_packed
-    end
-
-    def test_unpack
-      f = InfoZipFile.new('test/data/test-ad.zip')
-      Dir.mktmpdir do |d|
-        f.unpack(d)
-        assert_equal 5, Dir.new(d).entries.size
-      end
-    end
   end
  end

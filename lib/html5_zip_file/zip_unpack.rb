@@ -28,8 +28,11 @@ module ZipUnpack
 
   # @abstract
   class ZipFile
+
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::INFO
+
+    attr_reader :entries
 
     def initialize
       @name = ''
@@ -39,8 +42,6 @@ module ZipUnpack
     def size_packed
       0
     end
-
-    attr_reader :entries
 
     def unpack(dest)
       nil
@@ -72,6 +73,7 @@ module ZipUnpack
 
     # @raise [UnzipBinaryNotFoundException] unzip binary not found
     # @raise [UnzipBinaryBadVersionException] unzip binary is wrong versions
+    # @raise [ParsingException] unable to interpret output from unzip command
     #
     # @raise [CorruptZipFileError] the zip file is corrupt
     def initialize(filename)
@@ -82,22 +84,41 @@ module ZipUnpack
       # Set up sandbox
 
       # Check unzip command presence & version
-      ver = self.class.get_infozip_version
+      ver = get_infozip_version
       @@log.info "Info-ZIP: found version #{ver}"
 
       # Check zip file integrity
-      fail CorruptZipFileError unless self.class.crc_valid?(filename)
+      fail CorruptZipFileError unless crc_valid?(filename)
       @@log.info 'Info-ZIP: CRC check passed'
 
       # Get zip file entries
-      @entries = self.class.get_entries(filename)
+      @entries = get_entries(filename)
       fail CorruptZipFileError unless @entries
       @@log.info 'Info-ZIP: entries parsed'
-
-
     end
 
-    def self.get_infozip_version
+    def size_packed
+      @packed_size ||= File.size(@name)
+    end
+
+    # Warning: user-provided zip files should always be unpacked in a sandbox
+    #
+    # @todo test "should raise exception if results don't match manifest"
+
+    def unpack(dest)
+      @@log.info "Info-ZIP: unpacking to #{dest}"
+
+      # sandbox here.
+
+      exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
+      fail CorruptZipFileError, "Unzip failed" if exit_code != 0
+
+      @@log.info "Info-ZIP: unpacked succeeded"
+    end
+
+    private
+
+    def get_infozip_version
       exit_code, stdout = Subprocess.popen('unzip', '-v')
       fail UnzipBinaryNotFoundException unless exit_code == 0
       ver = parse_infozip_version(stdout)
@@ -108,7 +129,7 @@ module ZipUnpack
     # @return [String] version_string if whitelisted version_string found
     # @return [false] if whitelisted version_string not found
 
-    def self.parse_infozip_version(stdout)
+    def parse_infozip_version(stdout)
       VERSION_WHITELIST.each do |ver|
         return ver if Regexp.new('\A' + ver) =~ stdout
       end
@@ -120,7 +141,7 @@ module ZipUnpack
     #
     # @TODO: test memory/cpu behavior on zip bombs
 
-    def self.crc_valid?(name)
+    def crc_valid?(name)
       exit_code, stdout = Subprocess.popen('unzip', '-t', name)
       exit_code == 0
     end
@@ -132,12 +153,12 @@ module ZipUnpack
     #
     #@TODO: test memory/cpu behavior on zip bombs
 
-    def self.get_entries(name)
+    def get_entries(name)
       exit_code, stdout = Subprocess.popen('unzip', '-l', name)
       exit_code == 0 ? parse_entries(stdout) : false
     end
 
-    def self.parse_entries(stdout)
+    def parse_entries(stdout)
       lines = stdout.split("\n")
       fail ParsingException, 'unzip -l output has too few lines.' \
                              if lines.size < 5
@@ -158,25 +179,6 @@ module ZipUnpack
         end
       end
       entries
-    end
-
-    def size_packed
-      @packed_size ||= File.size(@name)
-    end
-
-    # Warning: user-provided zip files should always be unpacked in a sandbox
-    #
-    # @todo test "should raise exception if results don't match manifest"
-
-    def unpack(dest)
-      @@log.info "Info-ZIP: unpacking to #{dest}"
-
-      # sandbox here.
-
-      exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
-      fail CorruptZipFileError, "Unzip failed" if exit_code != 0
-
-      @@log.info "Info-ZIP: unpacked succeeded"
     end
 
   end
