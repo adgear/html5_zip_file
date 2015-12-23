@@ -3,45 +3,31 @@ require 'logger'
 require 'rubygems'
 require 'html5_zip_file/subprocess'
 
-
-
-# extract inside a jail
-#
-# test to enforce whitelisted CLI binary versions
-# --> implement as a class method, called by the constructor (and a test...)
-# --> hook check_infozip() into rails startup code.
-#
-# An alternative would be to use the Python standard library's zip module
-#
-# Try dropping the checks and depending instead on limits enforced by linux fs namespace / cgroups
-
-
-
-
 # https://www.pkware.com/support/zip-app-note/
 # https://en.wikipedia.org/wiki/Zip_(file_format)
 # https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
 
 module ZipUnpack
 
-  # "Unpack failed"
   Error = Class.new(StandardError)
-  VersionException = Class.new(Error)
-  ParsingException = Class.new(Error)
+
   CorruptZipFileError = Class.new(Error)
 
   class Entry
+    include Comparable
     attr_reader :ftype, :name, :size
     def initialize(ftype, name, size)
       @ftype = ftype
       @name = name
       @size = size
     end
+    def <=>(another)
+      name <=> another.name
+    end
   end
 
   # @abstract
   class ZipFile
-
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::INFO
 
@@ -67,7 +53,6 @@ module ZipUnpack
   end
 
   class CorruptFile < ZipFile
-
     def initialize
       super()
     end
@@ -76,25 +61,103 @@ module ZipUnpack
   class InfoZipFile < ZipFile
 
     InfoZipError = Class.new(StandardError)
-    VersionException = Class.new(InfoZipError)
+
+    UnzipBinaryNotFoundException = Class.new(InfoZipError)
+    UnzipBinaryBadVersionException = Class.new(InfoZipError)
+
     ParsingException = Class.new(InfoZipError)
 
     # Compatible Info-ZIP versions
-    VERSION_WHITELIST = ["UnZip 5.52", "UnZip 6.0"]
+    VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']
 
-    def initialize(name)
+    # @raise [UnzipBinaryNotFoundException] unzip binary not found
+    # @raise [UnzipBinaryBadVersionException] unzip binary is wrong versions
+    #
+    # @raise [CorruptZipFileError] the zip file is corrupt
+    def initialize(filename)
       super()
 
-      @name = name
+      @name = filename
 
-      # Check cmd line utility presence & version
-      self.class.check_infozip()
+      # Set up sandbox
+
+      # Check unzip command presence & version
+      ver = self.class.get_infozip_version
+      @@log.info "Info-ZIP: found version #{ver}"
 
       # Check zip file integrity
-      self.class.check_crc(name)
+      fail CorruptZipFileError unless self.class.crc_valid?(filename)
+      @@log.info 'Info-ZIP: CRC check passed'
 
       # Get zip file entries
-      @entries = self.class.get_entries(name)
+      @entries = self.class.get_entries(filename)
+      fail CorruptZipFileError unless @entries
+      @@log.info 'Info-ZIP: entries parsed'
+
+
+    end
+
+    def self.get_infozip_version
+      exit_code, stdout = Subprocess.popen('unzip', '-v')
+      fail UnzipBinaryNotFoundException unless exit_code == 0
+      ver = parse_infozip_version(stdout)
+      fail UnzipBinaryBadVersionException if ver == false
+      ver
+    end
+
+    # @return [String] version_string if whitelisted version_string found
+    # @return [false] if whitelisted version_string not found
+
+    def self.parse_infozip_version(stdout)
+      VERSION_WHITELIST.each do |ver|
+        return ver if Regexp.new('\A' + ver) =~ stdout
+      end
+      false
+    end
+
+    # Extract the files in memory and compare the CRC of each
+    # expanded file with the original file's stored CRC value.
+    #
+    # @TODO: test memory/cpu behavior on zip bombs
+
+    def self.crc_valid?(name)
+      exit_code, stdout = Subprocess.popen('unzip', '-t', name)
+      exit_code == 0
+    end
+
+    # Get zip file entries
+    #
+    # @return [Array<Entry>] array of entries
+    # @return [false] zip file is corrupt
+    #
+    #@TODO: test memory/cpu behavior on zip bombs
+
+    def self.get_entries(name)
+      exit_code, stdout = Subprocess.popen('unzip', '-l', name)
+      exit_code == 0 ? parse_entries(stdout) : false
+    end
+
+    def self.parse_entries(stdout)
+      lines = stdout.split("\n")
+      fail ParsingException, 'unzip -l output has too few lines.' \
+                             if lines.size < 5
+      entry_lines = lines.slice(3, lines.count - 5)
+      entries = []
+      entry_lines.each do |entry_line|
+        if /^\s*(\d+)\s+\d+-\d+-\d+\s+\d+:\d+\s+(.+)$/ =~ entry_line
+          entry_size = $1.to_i
+          entry_name = $2
+          if entry_name[-1, 1] == '/'
+            fail ParsingException, "Directory entry with non-zero size." if entry_size != 0
+            entries << Entry.new(:directory, entry_name, entry_size)
+          else
+            entries << Entry.new(:file, entry_name, entry_size)
+          end
+        else
+          fail ParsingException, 'Bad entry line.'
+        end
+      end
+      entries
     end
 
     def size_packed
@@ -104,121 +167,16 @@ module ZipUnpack
     # Warning: user-provided zip files should always be unpacked in a sandbox
     #
     # @todo test "should raise exception if results don't match manifest"
-    #
-    #
+
     def unpack(dest)
-      @@log.info "Info-ZIP: unpacking #{@name} to #{dest}"
+      @@log.info "Info-ZIP: unpacking to #{dest}"
+
       # sandbox here.
+
       exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
-      if exit_code == 0
-        @@log.info "Info-ZIP: unpacked succeeded"
-        # Raise exception if result doesn't match what was in the manifest
-      else
-        self.class.log_debug_info(Logger::ERROR, exit_code, stdout, stderr)
-        raise CorruptZipFileError, "Unzip failed (unpack#{@name} to #{dest})."
-      end
-      return nil
-    end
+      fail CorruptZipFileError, "Unzip failed" if exit_code != 0
 
-    private
-
-    def self.check_infozip()
-      # raises CommandNotFoundException if the binary is not found
-      exit_code, stdout, stderr = Subprocess.popen('unzip', '-v')
-      VERSION_WHITELIST.each do |ver|
-        if Regexp.new('\A'+ver) =~ stdout
-          @@log.info "Info-ZIP: found version #{ver}"
-          return
-        end
-      end
-      log_debug_info(Logger::FATAL, exit_code, stdout, stderr)
-      raise VersionException, "Version does not match whitelist #{VERSION_WHITELIST}."
-    end
-
-    # Extract the files in memory and compare the CRC of each
-    # expanded file with the original file's stored CRC value.
-    #
-    # @TODO: test memory/cpu behavior on zip bombs
-    def self.check_crc(name)
-      exit_code, stdout, stderr = Subprocess::popen('unzip', '-t', name)
-      if exit_code == 0
-        @@log.info "Info-ZIP: CRC check passed (#{name})"
-      else
-        log_debug_info(Logger::ERROR, exit_code, stdout, stderr)
-        raise CorruptZipFileError, "CRC check failed on #{name}"
-      end
-    end
-
-    # Get zip file entries (without extracting)
-    #
-    # @TODO: test memory/cpu behavior on zip bombs
-
-    def self.get_entries(name)
-      exit_code, stdout, stderr = Subprocess::popen('unzip', '-l', name)
-      if exit_code == 0
-        entries = parse_list_stdout(stdout)
-        @@log.info "Info-ZIP: entries parsed (#{name})"
-        return entries
-      else
-        log_debug_info(exit_code, stdout, stderr)
-        raise CorruptZipFileError, "Failed to get entries (#{name})"
-      end
-    end
-
-    # sclaret@Simons-MBP:~/workspace/html5_zip_file$ unzip -l test/data/test-ad.zip
-    # Archive:  test/data/test-ad.zip
-    # Length     Date      Time    Name
-    # --------   ----      ----    ----
-    # 112        10-06-15 10:37    index.html
-    # 0          10-06-15 10:36    images/
-    # 732059     10-03-15 21:58    images/test.png
-    # 0          10-08-15 13:46    foo/
-    # 62         10-08-15 13:46    foo/index.html
-    # 41         10-08-15 13:46    foo/index2.html
-    # --------                     -------
-    # 732274                       6 files
-    #
-    # @todo move cmd line example to comment above a unit test
-    #
-    # @TODO: test "empty zip file"
-    # @TODO: test "space in filename"
-    # @TODO: test "space at beginning/end of filename"
-    # @TODO: test "non zero-sized directory entry"
-    def self.parse_list_stdout(stdout)
-      lines = stdout.split("\n")
-      raise ParsingException, "unzip -l output has too few lines." if lines.count()< 4
-
-      entry_lines = lines[3..lines.count()-3]
-
-      entries = []
-      entry_lines.each do |entry_line|
-        # 0          10-06-15 10:36    images/
-        # 732059     10-03-15 21:58    images/test.png
-        if /^\s*(\d+)\s+\d+-\d+-\d+\s+\d+:\d+\s+(.+)$/ =~ entry_line
-          entry_size = $1.to_i
-          entry_name = $2
-          if entry_name[-1,1] == '/'
-            if entry_size != 0
-              @@log.fatal entry_line
-              raise ParsingException, "Directory entry with non-zero size."
-            end
-            entries << Entry.new(:directory, entry_name, entry_size)
-          else
-            entries << Entry.new(:file, entry_name, entry_size)
-          end
-        else
-          @@log.fatal entry_line
-          raise ParsingException, "Bad entry line."
-        end
-      end
-
-      return entries
-    end
-
-    def self.log_debug_info(level, exit_code, stdout, stderr)
-      @@log.add(level) { "Info-ZIP: exit code: #{exit_code}" }
-      @@log.add(level) { "Info-ZIP: stdout:\n#{stdout}" }
-      @@log.add(level) { "Info-ZIP: stderr:\n#{stderr}" }
+      @@log.info "Info-ZIP: unpacked succeeded"
     end
 
   end
