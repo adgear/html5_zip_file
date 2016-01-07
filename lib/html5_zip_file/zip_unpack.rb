@@ -63,7 +63,6 @@ module ZipUnpack
 
     InfoZipError = Class.new(StandardError)
 
-    UnzipBinaryNotFoundError = Class.new(InfoZipError)
     UnzipBinaryBadVersionError = Class.new(InfoZipError)
 
     ParsingError = Class.new(InfoZipError)
@@ -120,7 +119,6 @@ module ZipUnpack
 
     def get_infozip_version
       exit_code, stdout = Subprocess.popen('unzip', '-v')
-      raise UnzipBinaryNotFoundError unless exit_code == 0
       ver = parse_infozip_version(stdout)
       raise UnzipBinaryBadVersionError if ver == false
       ver
