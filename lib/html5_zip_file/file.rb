@@ -191,7 +191,7 @@ module HTML5ZipFile
     # @return [Number] total size of unpacked contents in bytes
 
     def size_unpacked
-      @size_unpacked ||= (file_entries.size > 0) ? file_entries.map(&:size).reduce(:+) : 0
+      @size_unpacked ||= file_entries.reduce(0) { |memo, entry| memo + entry.size  }
     end
 
     # @return [Array<ZipUnpack::Entry>] files and directories in the zip file
