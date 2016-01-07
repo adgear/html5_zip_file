@@ -7,9 +7,9 @@ require 'html5_zip_file/zip_unpack'
 module HTML5ZipFile
   Error = Class.new(StandardError)
 
-  DestinationException  = Class.new(Error)
-  InexistentException = Class.new(DestinationException)
-  NotEmptyException = Class.new(DestinationException)
+  DestinationError  = Class.new(Error)
+  InexistentError = Class.new(DestinationError)
+  NotEmptyError = Class.new(DestinationError)
 
   class File
     private_class_method :new
@@ -161,22 +161,22 @@ module HTML5ZipFile
     #
     # @return [void]
     #
-    # @raise [DestinationException] if directory does not exist or is not empty
+    # @raise [DestinationError] if directory does not exist or is not empty
     #
     # @todo implement sandbox
 
     def unpack(destination, sandbox = false)
       raise NotImplementedError if sandbox == true
 
-      # raise InexistentException if !Dir.exists?(destination)
+      # raise InexistentError if !Dir.exists?(destination)
       # @deprecated ruby 1.8.7 compat
       begin
         Dir.new(destination)
       rescue SystemCallError
-        raise InexistentException
+        raise InexistentError
       end
 
-      raise NotEmptyException, "Directory not empty (#{destination})." if
+      raise NotEmptyError, "Directory not empty (#{destination})." if
         Dir.entries(destination).size > 2
 
       @zip_file.unpack(destination)

@@ -63,17 +63,17 @@ module ZipUnpack
 
     InfoZipError = Class.new(StandardError)
 
-    UnzipBinaryNotFoundException = Class.new(InfoZipError)
-    UnzipBinaryBadVersionException = Class.new(InfoZipError)
+    UnzipBinaryNotFoundError = Class.new(InfoZipError)
+    UnzipBinaryBadVersionError = Class.new(InfoZipError)
 
-    ParsingException = Class.new(InfoZipError)
+    ParsingError = Class.new(InfoZipError)
 
     # Compatible Info-ZIP versions
     VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']
 
-    # @raise [UnzipBinaryNotFoundException] unzip binary not found
-    # @raise [UnzipBinaryBadVersionException] unzip binary is wrong versions
-    # @raise [ParsingException] unable to interpret output from unzip command
+    # @raise [UnzipBinaryNotFoundError] unzip binary not found
+    # @raise [UnzipBinaryBadVersionError] unzip binary is wrong versions
+    # @raise [ParsingError] unable to interpret output from unzip command
     #
     # @raise [CorruptZipFileError] the zip file is corrupt
     def initialize(filename)
@@ -120,9 +120,9 @@ module ZipUnpack
 
     def get_infozip_version
       exit_code, stdout = Subprocess.popen('unzip', '-v')
-      raise UnzipBinaryNotFoundException unless exit_code == 0
+      raise UnzipBinaryNotFoundError unless exit_code == 0
       ver = parse_infozip_version(stdout)
-      raise UnzipBinaryBadVersionException if ver == false
+      raise UnzipBinaryBadVersionError if ver == false
       ver
     end
 
@@ -160,7 +160,7 @@ module ZipUnpack
 
     def parse_entries(stdout)
       lines = stdout.split("\n")
-      raise ParsingException, 'unzip -l output has too few lines.' \
+      raise ParsingError, 'unzip -l output has too few lines.' \
                              if lines.size < 5
       entry_lines = lines.slice(3, lines.count - 5)
       entries = []
@@ -169,13 +169,13 @@ module ZipUnpack
           entry_size = $1.to_i
           entry_name = $2
           if entry_name[-1, 1] == '/'
-            raise ParsingException, "Directory entry with non-zero size." if entry_size != 0
+            raise ParsingError, "Directory entry with non-zero size." if entry_size != 0
             entries << Entry.new(:directory, entry_name, entry_size)
           else
             entries << Entry.new(:file, entry_name, entry_size)
           end
         else
-          raise ParsingException, 'Bad entry line.'
+          raise ParsingError, 'Bad entry line.'
         end
       end
       entries

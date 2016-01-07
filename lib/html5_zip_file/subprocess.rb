@@ -52,18 +52,18 @@ class Subprocess
 
   SubprocessError = Class.new(StandardError)
 
-  CommandNotFoundException = Class.new(SubprocessError)
+  CommandNotFoundError = Class.new(SubprocessError)
 
-  Timeout = Class.new(SubprocessError)
-  AbnormalTermination = Class.new(SubprocessError)
+  TimeoutError = Class.new(SubprocessError)
+  AbnormalTerminationError = Class.new(SubprocessError)
 
-  SecurityLimitBreachedException = Class.new(SubprocessError)
+  SecurityLimitError = Class.new(SubprocessError)
 
   SUBPROCESS_TIMEOUT = 20 #seconds
   READ_CHUNK_SIZE = 100 #bytes
 
   # Maximum number of 100-byte chunks to read from a file descriptor
-  # before raising SecurityLimitBreachedException
+  # before raising SecurityLimitError
   MAX_CHUNKS = 1000
 
   def self.popen(*args)
@@ -119,7 +119,7 @@ class Subprocess
 
       exit_code = $?.exitstatus
       if exit_code == 240
-        raise CommandNotFoundException, "Could not find the command #{args[0]}"
+        raise CommandNotFoundError, "Could not find the command #{args[0]}"
       end
 
       return exit_code, stdout_contents, stderr_contents
@@ -136,11 +136,11 @@ class Subprocess
     stdout_content, stderr_content = '', ''
     while !open_fds.empty?
       ready_fds = select(open_fds, nil, nil, SUBPROCESS_TIMEOUT)
-      raise Timeout if ready_fds.nil?
+      raise TimeoutError if ready_fds.nil?
       if ready_fds[0].include?(stdout)
         begin
           o_chunks_read += 1
-          raise SecurityLimitBreachedException if o_chunks_read > MAX_CHUNKS
+          raise SecurityLimitError if o_chunks_read > MAX_CHUNKS
           stdout_content << stdout.read_nonblock(READ_CHUNK_SIZE)
         rescue EOFError
           open_fds.delete_if{ |f| f == stdout}
@@ -149,7 +149,7 @@ class Subprocess
       if ready_fds[0].include?(stderr)
         begin
           e_chunks_read += 1
-          raise SecurityLimitBreachedException if e_chunks_read > MAX_CHUNKS
+          raise SecurityLimitError if e_chunks_read > MAX_CHUNKS
           stderr_content << stderr.read_nonblock(READ_CHUNK_SIZE)
         rescue EOFError
           open_fds.delete_if{ |f| f == stderr}
@@ -223,7 +223,7 @@ end
 
 #   while !open_fds.empty?
 #     ready_fds = select(open_fds, nil, nil, SUBPROCESS_TIMEOUT)
-#     raise Timeout if ready_fds.nil?
+#     raise TimeoutError if ready_fds.nil?
 #     if ready_fds[0].include?(stdout)
 #       begin
 #         stdout_content << stdout.read_nonblock(READ_CHUNK_SIZE)

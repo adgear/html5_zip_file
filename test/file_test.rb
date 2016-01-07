@@ -188,10 +188,10 @@ module HTML5ZipFile
 
     def test_unpack_bad_destinations
       File.open('test/data/test-ad.zip') do |f|
-        assert_raises(InexistentException) do
+        assert_raises(InexistentError) do
           f.unpack('test/data/this/directory_does_not_exist')
         end
-        assert_raises(NotEmptyException) do
+        assert_raises(NotEmptyError) do
           f.unpack('test/unpack_non_empty')
         end
       end
