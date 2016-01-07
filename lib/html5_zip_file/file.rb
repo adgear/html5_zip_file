@@ -25,7 +25,7 @@ module HTML5ZipFile
     #
     # Note: if corruption is detected, an {File} object is
     # still yielded to the block, but its {#validate} method always
-    # returns false.
+    # returns false and its {#unpack} method is a noop.
     #
     # @param [String] file_name file name of zip file
     #
