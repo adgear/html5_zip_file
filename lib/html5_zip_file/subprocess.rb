@@ -159,6 +159,8 @@ class Subprocess
     return stdout_content, stderr_content
   end
 
+  private_class_method :collect_data
+
 end
 
 
