@@ -66,7 +66,6 @@ module HTML5ZipFile
     def test_validate_valid_entry_count
       File.open('test/data/test-ad.zip') do |f|
         assert f.validate(:entry_count => 6)
-        assert f.validate(:entry_count => 7)
         assert f.validate(:entry_count => 9)
       end
     end
