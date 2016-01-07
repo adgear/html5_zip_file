@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm -rf doc || exit 0;
+set -o errexit -o nounset -o pipefail
+
+rm -rf doc
 mkdir doc
 
 bundle exec yard doc
