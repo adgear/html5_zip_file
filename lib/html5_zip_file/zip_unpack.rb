@@ -88,12 +88,12 @@ module ZipUnpack
       @@log.info "Info-ZIP: found version #{ver}"
 
       # Check zip file integrity
-      fail CorruptZipFileError unless crc_valid?(filename)
+      raise CorruptZipFileError unless crc_valid?(filename)
       @@log.info 'Info-ZIP: CRC check passed'
 
       # Get zip file entries
       @entries = get_entries(filename)
-      fail CorruptZipFileError unless @entries
+      raise CorruptZipFileError unless @entries
       @@log.info 'Info-ZIP: entries parsed'
     end
 
@@ -111,7 +111,7 @@ module ZipUnpack
       # sandbox here.
 
       exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
-      fail CorruptZipFileError, "Unzip failed" if exit_code != 0
+      raise CorruptZipFileError, "Unzip failed" if exit_code != 0
 
       @@log.info "Info-ZIP: unpack succeeded"
     end
@@ -120,9 +120,9 @@ module ZipUnpack
 
     def get_infozip_version
       exit_code, stdout = Subprocess.popen('unzip', '-v')
-      fail UnzipBinaryNotFoundException unless exit_code == 0
+      raise UnzipBinaryNotFoundException unless exit_code == 0
       ver = parse_infozip_version(stdout)
-      fail UnzipBinaryBadVersionException if ver == false
+      raise UnzipBinaryBadVersionException if ver == false
       ver
     end
 
@@ -160,7 +160,7 @@ module ZipUnpack
 
     def parse_entries(stdout)
       lines = stdout.split("\n")
-      fail ParsingException, 'unzip -l output has too few lines.' \
+      raise ParsingException, 'unzip -l output has too few lines.' \
                              if lines.size < 5
       entry_lines = lines.slice(3, lines.count - 5)
       entries = []
@@ -169,13 +169,13 @@ module ZipUnpack
           entry_size = $1.to_i
           entry_name = $2
           if entry_name[-1, 1] == '/'
-            fail ParsingException, "Directory entry with non-zero size." if entry_size != 0
+            raise ParsingException, "Directory entry with non-zero size." if entry_size != 0
             entries << Entry.new(:directory, entry_name, entry_size)
           else
             entries << Entry.new(:file, entry_name, entry_size)
           end
         else
-          fail ParsingException, 'Bad entry line.'
+          raise ParsingException, 'Bad entry line.'
         end
       end
       entries

@@ -166,9 +166,9 @@ module HTML5ZipFile
     # @todo implement sandbox
 
     def unpack(destination, sandbox = false)
-      fail NotImplementedError if sandbox == true
+      raise NotImplementedError if sandbox == true
 
-      # fail InexistentException if !Dir.exists?(destination)
+      # raise InexistentException if !Dir.exists?(destination)
       # @deprecated ruby 1.8.7 compat
       begin
         Dir.new(destination)
@@ -176,7 +176,7 @@ module HTML5ZipFile
         raise InexistentException
       end
 
-      fail NotEmptyException, "Directory not empty (#{destination})." if
+      raise NotEmptyException, "Directory not empty (#{destination})." if
         Dir.entries(destination).size > 2
 
       @zip_file.unpack(destination)
