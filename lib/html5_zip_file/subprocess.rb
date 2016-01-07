@@ -96,7 +96,7 @@ class Subprocess
       rescue Errno::ENOENT => e
         # cannot simply re-raise an exception because it won't
         # reliable reach the parent process
-        exit(240)
+        exit!(240)
         # @TODO, find a better way to propagate ENOENT to the parent
       end
 
