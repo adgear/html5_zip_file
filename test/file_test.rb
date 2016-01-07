@@ -11,15 +11,14 @@ module HTML5ZipFile
     end
 
     def test_validate_valid_zip
-      retval = File.open('test/data/test-ad.zip') do |f|
+      File.open('test/data/test-ad.zip') do |f|
         assert f.validate
         assert_empty f.failures
       end
-      assert_nil retval
     end
 
     def test_validate_invalid_zip
-      retval = File.open('test/data/invalid.zip') do |f|
+      File.open('test/data/invalid.zip') do |f|
         refute f.validate
         assert_equal [:zip], f.failures
 
@@ -35,7 +34,6 @@ module HTML5ZipFile
         assert_equal f.directory_entries, []
         assert_equal f.html_file_entries, []
       end
-      assert_nil retval
     end
 
 
