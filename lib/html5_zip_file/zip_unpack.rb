@@ -30,7 +30,7 @@ module ZipUnpack
   class ZipFile
 
     @@log = Logger.new(STDOUT)
-    @@log.level = Logger::INFO
+    @@log.level = Logger::WARN
 
     attr_reader :entries
 

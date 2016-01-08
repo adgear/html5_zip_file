@@ -7,7 +7,7 @@ module ZipUnpack
   class InfoZipFileTest < Minitest::Test
 
     def setup
-      ZipUnpack::ZipFile.set_log_level Logger::FATAL
+
     end
 
     def f

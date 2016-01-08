@@ -33,22 +33,24 @@ Experiment with the console:
 
     $ mkdir /tmp/test_extract
     $ bundle exec rake console
-    irb(main):001:0> HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
-    irb(main):002:1*
-    irb(main):003:1* file_valid = f.validate( :unpacked_size => 700000 )
-    irb(main):004:1>
-    irb(main):005:1*   if file_valid
-    irb(main):006:2>     f.unpack('/tmp/test_extract')
-    irb(main):007:2>   else
-    irb(main):008:2*     f.failures.each { |failure|  puts(failure) }
-    irb(main):009:2>   end
-    irb(main):010:1>
-    irb(main):011:1* end
+    irb(main):001:0> ZipUnpack::ZipFile.set_log_level(Logger::INFO)
+    irb(main):002:0>
+    irb(main):003:0> HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    irb(main):004:1*
+    irb(main):005:1* file_valid = f.validate( :unpacked_size => 700000 )
+    irb(main):006:1>
+    irb(main):007:1*   if file_valid
+    irb(main):008:2>     f.unpack('/tmp/test_extract')
+    irb(main):009:2>   else
+    irb(main):010:2*     f.failures.each { |failure|  puts(failure) }
+    irb(main):011:2>   end
+    irb(main):012:1>
+    irb(main):013:1* end
 
     I, [2015-12-23T17:01:14.788303 #72989]  INFO -- : Info-ZIP: found version UnZip 5.52
     I, [2015-12-23T17:01:14.802631 #72989]  INFO -- : Info-ZIP: CRC check passed
     I, [2015-12-23T17:01:14.808715 #72989]  INFO -- : Info-ZIP: entries parsed
-    I, [2015-12-23T17:01:14.808924 #72989]  INFO -- : Info-ZIP: unpacking to /tmp/test_extract5
+    I, [2015-12-23T17:01:14.808924 #72989]  INFO -- : Info-ZIP: unpacking to /tmp/test_extract
     I, [2015-12-23T17:01:14.825811 #72989]  INFO -- : Info-ZIP: unpacked succeeded
 
 While developing, you could add testing code at the bottom of a file and run it:
@@ -80,6 +82,8 @@ Execute:
 Integrate into your application:
 
     require 'html5_zip_file'
+
+    ZipUnpack::ZipFile.set_log_level(Logger::INFO)
 
     HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
       ...
