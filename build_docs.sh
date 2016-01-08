@@ -18,4 +18,4 @@ git add .
 
 git commit -m "Deploy to GitHub Pages"
 
-exec git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages &>/dev/null
+exec git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages #&>/dev/null
