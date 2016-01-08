@@ -99,7 +99,7 @@ http://yardoc.org
 
     $ bundle exec yard help
 
-    $ bundle exec yard doc
+    $ bundle exec yard doc --files test/kitchen_sink.rb
 
     $ bundle exec yard server --reload
 

@@ -5,7 +5,7 @@ set -o errexit -o nounset -o pipefail
 rm -rf doc
 mkdir doc
 
-bundle exec yard doc
+bundle exec yard doc --files test/kitchen_sink.rb
 
 cd doc
 
