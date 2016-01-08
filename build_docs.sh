@@ -18,6 +18,6 @@ git add .
 
 git commit -m "Deploy to GitHub Pages"
 
-git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages > /dev/null 2>&1
+export github_token="BAD_TOKEN"
 
-echo "git push exit code: ${?}"
+exec git push --force --quiet "https://${github_token}@github.com/adgear/html5_zip_file.git" master:gh-pages &>/dev/null
