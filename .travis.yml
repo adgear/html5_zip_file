@@ -8,6 +8,7 @@ matrix:
     gemfile: Gemfile
     script:
       - bundle exec rake test
+      - bundle exec yard config load_plugins true
       - bundle exec yard config -a autoload_plugins yard-doctest
       - bundle exec yard doctest
       - ./build_docs.sh
