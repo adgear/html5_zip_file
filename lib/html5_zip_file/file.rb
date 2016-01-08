@@ -73,10 +73,8 @@ module HTML5ZipFile
 
     def self.open(file_name)
       yield new(ZipUnpack::InfoZipFile.new(file_name))
-      return nil
     rescue ZipUnpack::CorruptZipFileError
       yield new(ZipUnpack::CorruptFile.new)
-      return nil
     end
 
     # Failures detected by the last invocation of {#validate}
