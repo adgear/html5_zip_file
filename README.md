@@ -151,10 +151,6 @@ A first layer of security is provided by imposing sensible limits on
 Validation requires running the "unzip -t" and "unzip -l" commands
 in subprocesses, and parsing the stdout in a ruby parent process.
 
-A limit of 100 kilobytes is placed on the output of the subprocess, to
-limit the damage a runaway (possibly malicious) subprocess can do to
-its parent. See Subprocess::MAX_CHUNKS.
-
 ### Zip unpacking
 
 Currently, the file is unpacked to a target directory with 'unzip -d'.
@@ -177,11 +173,11 @@ Stronger guarantees could be provided by unpacking in a sandbox:
 
 - Parent destroys the sandbox.
 
-Several steps can be taken to increase the security of the sandbox:
+Steps to increase the security of the sandbox:
 
 1.) Mount the temporary filesystem on a separate partition.
 
-You can determine what location tmpdir uses through irb:
+Determine the location tmpdir uses through irb:
 
 Ruby 2.2.2 on OSX:
 
