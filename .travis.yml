@@ -10,7 +10,7 @@ matrix:
       - bundle exec rake test
       - bundle exec yard config load_plugins true
       - bundle exec yard config -a autoload_plugins yard-doctest
-      - bundle exec yard doctest
+      - bundle exec yard doctest 1>/dev/null
       - ./build_docs.sh
   - rvm: 1.8.7
     gemfile: Gemfile_1_8_7
