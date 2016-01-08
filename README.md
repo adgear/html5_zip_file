@@ -10,16 +10,13 @@ Travis CI: https://travis-ci.org/adgear/html5_zip_file
 
 [![Build Status](https://travis-ci.org/adgear/html5_zip_file.svg?branch=ruby-1-8-7-compat)](https://travis-ci.org/adgear/html5_zip_file)
 
-
 ## Install for development
 
 Perform development with the current version of ruby (2.2.2).
 
-Check out the code:
-
     git clone git@github.com:adgear/html5_zip_file.git
 
-Install dependencies directly (without building a gem):
+Install dependencies:
 
     $ gem install bundler
     $ bundle install
@@ -29,45 +26,41 @@ Run tests:
     $ bundle exec rake test
     $ bundle exec ruby -I test test/file_test.rb -n /.*validate_valid_zip.*/
 
-Experiment with the console:
+## Usage
 
-    $ mkdir /tmp/test_extract
-    $ bundle exec rake console
-    irb(main):001:0> ZipUnpack::ZipFile.set_log_level(Logger::INFO)
-    irb(main):002:0>
-    irb(main):003:0> HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
-    irb(main):004:1*
-    irb(main):005:1* file_valid = f.validate( :unpacked_size => 700000 )
-    irb(main):006:1>
-    irb(main):007:1*   if file_valid
-    irb(main):008:2>     f.unpack('/tmp/test_extract')
-    irb(main):009:2>   else
-    irb(main):010:2*     f.failures.each { |failure|  puts(failure) }
-    irb(main):011:2>   end
-    irb(main):012:1>
-    irb(main):013:1* end
+Run doctests: {HTML5ZipFile::File.open},
+{HTML5ZipFile::File#validate} and {HTML5ZipFile::File#unpack}.
 
-    I, [2015-12-23T17:01:14.788303 #72989]  INFO -- : Info-ZIP: found version UnZip 5.52
-    I, [2015-12-23T17:01:14.802631 #72989]  INFO -- : Info-ZIP: CRC check passed
-    I, [2015-12-23T17:01:14.808715 #72989]  INFO -- : Info-ZIP: entries parsed
-    I, [2015-12-23T17:01:14.808924 #72989]  INFO -- : Info-ZIP: unpacking to /tmp/test_extract
-    I, [2015-12-23T17:01:14.825811 #72989]  INFO -- : Info-ZIP: unpacked succeeded
+    $ bundle exec yard doctest -v
+    Run options: -v --seed 20077
 
-While developing, you could add testing code at the bottom of a file and run it:
+    # Running:
 
-    $ bundle exec ruby lib/html5_zip_file/file.rb
+    Failed validation checks:
+    size_unpacked
+    file_count
+    HTML5ZipFile::File#validate#test_0001_Validate a zip file = 0.02 s = .
+    entries:
+    #<ZipUnpack::Entry:0x007fc209c494b0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007fc209c493c0 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007fc209c492d0 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007fc209c491e0 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007fc209c490a0 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007fc209c48fb0 @ftype=:file, @name="foo/index2.html", @size=41>
+    HTML5ZipFile::File.open#test_0001_Open a zip file = 0.03 s = .
+    /var/folders/_h/d4trcrkn3mv3w307j7_w3xbh0000gn/T/HTML5ZipFile_extract_20160108-93132-xa8xu9
+    .
+    ..
+    foo
+    images
+    index.html
+    HTML5ZipFile::File#unpack#test_0001_Unpack a zip file = 0.04 s = .
 
-But try writing a doctest directly as a comment of the class/method, and executing it:
+    Finished in 0.092421s, 32.4601 runs/s, 32.4601 assertions/s.
 
-    $ bundle exec yard doctest lib/html5_zip_file/file.rb
+    3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
 
-This is an easy way to produce documentation. See [Docs / Doctests](#label-Docs+-2F+Doctests) for details.
-
-To run the test suite on ruby 1.8.7, build the html5_zip_file_1_8_7
-gem, install it under ruby 1.8.7 and run 'rake test'.
-
-
-## Install into an application
+## Integrate
 
 Add the appropriate line to your application's Gemfile:
 
@@ -79,74 +72,24 @@ Execute:
 
     $ bundle install
 
-Integrate into your application:
+See {file:test/kitchen_sink.rb kitchen_sink.rb} for an example of how to actually use the code.
 
-    require 'html5_zip_file'
-
-    ZipUnpack::ZipFile.set_log_level(Logger::INFO)
-
-    HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
-      ...
-    end
-
-
-## Usage
-
-For a more sophisticated example, examine the doctest of
-{HTML5ZipFile::File.open}, then run it:
-
-    $ bundle exec yard doctest
-    Run options: --seed 27241
-
-    # Running:
-
-    I, [2015-12-23T17:02:57.023388 #73007]  INFO -- : Info-ZIP: found version UnZip 5.52
-    I, [2015-12-23T17:02:57.032418 #73007]  INFO -- : Info-ZIP: CRC check passed
-    I, [2015-12-23T17:02:57.036838 #73007]  INFO -- : Info-ZIP: entries parsed
-
-    size_unpacked:
-    732274
-
-    entries:
-    #<ZipUnpack::Entry:0x007fd6f3874188 @ftype=:file, @name="index.html", @size=112>
-    #<ZipUnpack::Entry:0x007fd6f386fea8 @ftype=:directory, @name="images/", @size=0>
-    #<ZipUnpack::Entry:0x007fd6f386f980 @ftype=:file, @name="images/test.png", @size=732059>
-    #<ZipUnpack::Entry:0x007fd6f386f750 @ftype=:directory, @name="foo/", @size=0>
-    #<ZipUnpack::Entry:0x007fd6f386f480 @ftype=:file, @name="foo/index.html", @size=62>
-    #<ZipUnpack::Entry:0x007fd6f386f048 @ftype=:file, @name="foo/index2.html", @size=41>
-
+    $ bundle exec ruby test/kitchen_sink.rb
+    I, [2016-01-08T17:42:27.565892 #93089]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2016-01-08T17:42:27.574506 #93089]  INFO -- : Info-ZIP: CRC check passed
+    I, [2016-01-08T17:42:27.578093 #93089]  INFO -- : Info-ZIP: entries parsed
+    size_unpacked: 732274
+    #<ZipUnpack::Entry:0x007f93141a29e0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007f93141a2800 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007f93141a2670 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007f93141a2468 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007f93141a2378 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007f93141a2210 @ftype=:file, @name="foo/index2.html", @size=41>
     Failed validation checks:
     size_unpacked
     file_count
     path_length
     contains_html_file
-    .
-
-    Finished in 0.025196s, 39.6888 runs/s, 39.6888 assertions/s.
-
-    1 runs, 1 assertions, 0 failures, 0 errors, 0 skips
-
-Try editing the doctest.
-
-Change the validation criteria in lib/html5_zip_file/file.rb:
-
-    :size_unpacked => 740000, :file_count => 6, :path_length => 15, :contains_html_file => true
-
-And re-run it:
-
-    $ bundle exec yard doctest lib/html5_zip_file/file.rb
-
-Also, try changing file_name from 'test-ad.zip' to 'invalid.zip'.
-
-### Validate
-
-See {HTML5ZipFile::File#validate}.
-
-
-### Unpack
-
-See {HTML5ZipFile::File#unpack}.
-
 
 ## Gems
 
@@ -213,37 +156,29 @@ rubygems.org, and install them in your destination environment with
 
 ## Docs / Doctests
 
-Note: the following don't work under ruby 1.8.7.  Use current ruby if
-you want to regenerate the documentation and run the doctests.
+Use current ruby.
 
 http://yardoc.org
 
-https://github.com/p0deje/yard-doctest
-
-    build doc/
+    $ bundle exec yard help
 
     $ bundle exec yard doc
 
-    live preview:
-
     $ bundle exec yard server --reload
-
-    filter:
 
     $ bundle exec yard list --query '@todo'
 
-    graph:
-
     $ bundle exec yard graph --full --dependencies | dot -Tpng -o outfile.png
 
-    $ bundle exec yard --help
+https://github.com/p0deje/yard-doctest
 
     $ bundle exec yard config load_plugins true
 
     $ bundle exec yard config -a autoload_plugins yard-doctest
 
-    $ bundle exec yard doctest
+    $ bundle exec yard doctest -h
 
+    $ bundle exec yard doctest -v
 
 ## External Dependency
 

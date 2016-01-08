@@ -32,49 +32,18 @@ module HTML5ZipFile
     # @yieldparam f [HTML5ZipFile::File]
     # @return [void]
     #
-    # @example Validate and unpack a zip file
+    # @example Open a zip file
     #
-    #  require 'html5_zip_file'
-    #  require 'tmpdir'
-    #
-    #  ZipUnpack::ZipFile.set_log_level Logger::INFO
-    #
-    #  HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
-    #    puts
-    #    puts 'size_unpacked:'
-    #    puts f.size_unpacked
-    #    puts
-    #    puts 'entries:'
-    #    f.entries.each { |e| puts(e.inspect()) }
-    #    puts
-    #
-    #    if f.validate( :size_unpacked => 700000,
-    #                   :file_count => 3,
-    #                   :path_length => 14,
-    #                   :contains_html_file => false )
-    #
-    #      puts 'Passed validation checks.'
-    #      Dir.mktmpdir("HTML5ZipFile_extract_") do |dir|
-    #        f.unpack(dir)
-    #      end
-    #
-    #    else
-    #
-    #      if f.failures.include? :zip
-    #        puts 'File is not a valid zip file.'
-    #      end
-    #
-    #      puts 'Failed validation checks: '
-    #      f.failures.each { |failure|  puts(failure) }
-    #
-    #    end
-    #
-    #  end  #=> nil
-
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #     puts "entries:"
+    #     f.entries.each { |e| puts(e.inspect()) }
+    #   end #=> nil
     def self.open(file_name)
       yield new(ZipUnpack::InfoZipFile.new(file_name))
+      nil
     rescue ZipUnpack::CorruptZipFileError
       yield new(ZipUnpack::CorruptFile.new)
+      nil
     end
 
     # Failures detected by the last invocation of {#validate}
@@ -103,6 +72,22 @@ module HTML5ZipFile
     # @option opts [Boolean] :contains_html_file require or disallow HTML files
     #
     # @return [Boolean] false if the zip file is corrupt or if any validation checks fail
+    #
+    # @example Validate a zip file
+    #
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #
+    #     if f.validate( :size_unpacked => 3, :file_count => 3)
+    #       puts 'Passed validation checks.'
+    #     else
+    #       if f.failures.include? :zip
+    #         puts 'File is not a valid zip file.'
+    #       end
+    #       puts 'Failed validation checks: '
+    #       f.failures.each { |failure|  puts(failure) }
+    #     end
+    #
+    #   end #=> nil
 
     def validate(opts = {})
       @failures = []
@@ -162,7 +147,17 @@ module HTML5ZipFile
     # @raise [DestinationError] if directory does not exist or is not empty
     #
     # @todo implement sandbox
-
+    #
+    # @example Unpack a zip file
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #
+    #      Dir.mktmpdir("HTML5ZipFile_extract_") do |dir|
+    #        f.unpack(dir)
+    #        puts dir
+    #        puts Dir.entries(dir)
+    #      end
+    #
+    #   end #=> nil
     def unpack(destination, sandbox = false)
       raise NotImplementedError if sandbox == true
 
