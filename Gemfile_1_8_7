@@ -1,0 +1,3 @@
+source "https://rubygems.org"
+
+gemspec :name => 'html5_zip_file_1_8_7'
