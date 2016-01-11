@@ -140,13 +140,10 @@ module HTML5ZipFile
     # Unpack the zip file to destination
     #
     # @param [String] destination path to an empty directory
-    # @param [Boolean] sandbox perform the unzip operation in a filesystem sandbox
     #
     # @return [void]
     #
     # @raise [DestinationError] if directory does not exist or is not empty
-    #
-    # @todo implement sandbox
     #
     # @example Unpack a zip file
     #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
@@ -158,9 +155,7 @@ module HTML5ZipFile
     #      end
     #
     #   end #=> nil
-    def unpack(destination, sandbox = false)
-      raise NotImplementedError if sandbox == true
-
+    def unpack(destination)
       # raise InexistentError if !Dir.exists?(destination)
       # @deprecated ruby 1.8.7 compat
       begin
