@@ -101,7 +101,10 @@ http://yardoc.org
 
     $ bundle exec yard doc --files test/kitchen_sink.rb
 
-    $ bundle exec yard server --reload
+    $ bundle exec yard server -r
+    $ rm -rf .yardoc/
+    $ bundle exec yard server -r -m
+    $ bundle exec yard help server
 
     $ bundle exec yard list --query '@todo'
 
