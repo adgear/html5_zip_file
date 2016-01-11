@@ -24,7 +24,7 @@ Install dependencies:
 Run tests:
 
     $ bundle exec rake test
-    $ bundle exec ruby -I test test/file_test.rb -n /.*validate_valid_zip.*/
+    $ bundle exec ruby -Itest test/file_test.rb -n "/.*validate_valid_zip.*/"
 
 ## Usage
 
