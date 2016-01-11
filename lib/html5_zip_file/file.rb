@@ -64,9 +64,9 @@ module HTML5ZipFile
     # @option opts [Number] :size_packed maximum total size of packed zip file in bytes
     # @option opts [Number] :size_unpacked maximum total size of unpacked contents in bytes
     #
-    # @option opts [Number] :entry_count maximum number of files and directories
-    # @option opts [Number] :file_count maximum number of files
-    # @option opts [Number] :directory_count maximum number of directories
+    # @option opts [Number] :entries maximum number of files and directories
+    # @option opts [Number] :file_entries maximum number of files
+    # @option opts [Number] :directory_entries maximum number of directories
     #
     # @option opts [Number] :path_length maximum path length in characters
     # @option opts [Number] :path_components maximum number of path components
@@ -90,7 +90,6 @@ module HTML5ZipFile
     #     end
     #
     #   end #=> nil
-
     def validate(opts = {})
       @failures = []
 
@@ -107,15 +106,15 @@ module HTML5ZipFile
         @failures << :size_unpacked unless size_unpacked <= opts[:size_unpacked]
       end
 
-      if opts.key? :entry_count
-        @failures << :entry_count unless entries.size <= opts[:entry_count]
+      if opts.key? :entries
+        @failures << :entries unless entries.size <= opts[:entries]
       end
-      if opts.key? :file_count
-        @failures << :file_count unless file_entries.size <= opts[:file_count]
+      if opts.key? :file_entries
+        @failures << :file_entries unless file_entries.size <= opts[:file_entries]
       end
-      if opts.key? :directory_count
-        @failures << :directory_count unless
-          directory_entries.size <= opts[:directory_count]
+      if opts.key? :directory_entries
+        @failures << :directory_entries unless
+          directory_entries.size <= opts[:directory_entries]
       end
 
       if opts.key? :path_length
@@ -174,25 +173,21 @@ module HTML5ZipFile
     end
 
     # @return [Number] total size of packed zip file in bytes
-
     def size_packed
       @zip_file.size_packed
     end
 
     # @return [Number] total size of unpacked contents in bytes
-
     def size_unpacked
       @size_unpacked ||= file_entries.reduce(0) { |memo, entry| memo + entry.size  }
     end
 
     # @return [Array<ZipUnpack::Entry>] files and directories in the zip file
-
     def entries
       @zip_file.entries
     end
 
     # @return [Array<ZipUnpack::Entry>] files in the zip file
-
     def file_entries
       @file_entries ||= entries.select do |entry|
         entry.ftype == :file
@@ -200,7 +195,6 @@ module HTML5ZipFile
     end
 
     # @return [Array<ZipUnpack::Entry>] directories in the zip file
-
     def directory_entries
       @directory_entries ||= entries.select do |entry|
         entry.ftype == :directory
@@ -208,7 +202,6 @@ module HTML5ZipFile
     end
 
     # @return [Array<ZipUnpack::Entry>] html files in the zip file
-
     def html_file_entries
       @html_file_entries ||= file_entries.select do |entry|
         entry.name =~ /\.html?\z/i
