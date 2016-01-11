@@ -77,10 +77,8 @@ module ZipUnpack
 
     def unpack(dest)
       @@log.info "Info-ZIP: unpacking to #{dest}"
-
-      exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @filename)
-      raise CorruptZipFileError, "Unzip failed" if exit_code != 0
-
+      child = POSIX::Spawn::Child.new('unzip', '-d', dest, @filename, SPAWN_CHILD_OPTS)
+      raise CorruptZipFileError, "Unzip failed" if child.status.exitstatus != 0
       @@log.info "Info-ZIP: unpack succeeded"
     end
 
