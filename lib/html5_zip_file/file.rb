@@ -34,6 +34,10 @@ module HTML5ZipFile
     #
     # @return [nil] all work must be performed on the {File}object yielded to the block.
     #
+    # @raise [Errno::ENOENT] unzip command line binary not found in $PATH
+    # @raise [UnzipBadVersionError] unzip version string not whitelisted
+    # @raise [UnzipParsingError] unable to parse output from unzip command
+    #
     # @example Open a zip file
     #
     #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|

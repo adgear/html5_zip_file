@@ -42,9 +42,9 @@ module ZipUnpack
       :timeout => 20
     }
 
-    InfoZipError = Class.new(StandardError)
-    UnzipBadVersionError = Class.new(InfoZipError)
-    UnzipParsingError = Class.new(InfoZipError)
+    ZipFileError = Class.new(StandardError)
+    UnzipBadVersionError = Class.new(ZipFileError)
+    UnzipParsingError = Class.new(ZipFileError)
 
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::WARN
@@ -54,7 +54,7 @@ module ZipUnpack
     end
 
     # @raise [Errno::ENOENT] unzip command line binary not found in $PATH
-    # @raise [UnzipBadVersionError] unzip binary version string not whitelisted
+    # @raise [UnzipBadVersionError] unzip version string not whitelisted
     # @raise [UnzipParsingError] unable to parse output from unzip command
     #
     # @raise [CorruptZipFileError] the zip file is corrupt
@@ -91,17 +91,12 @@ module ZipUnpack
     private
 
     # @return [String] version_string whitelisted version_string found
-    #
-    # @raise [Errno::ENOENT] unzip command line binary not found in $PATH
-    # @raise [UnzipBadVersionError] unzip binary version string not whitelisted
     def get_infozip_version
       child = POSIX::Spawn::Child.new('unzip', '-v', SPAWN_CHILD_OPTS)
       parse_infozip_version_string(child.out)
     end
 
     # @return [String] version_string whitelisted version_string found
-    #
-    # @raise [UnzipBadVersionError] unzip binary version string not whitelisted
     def parse_infozip_version_string(stdout)
       VERSION_WHITELIST.each do |ver|
         return ver if Regexp.new('\A' + ver) =~ stdout
@@ -121,8 +116,6 @@ module ZipUnpack
     # Get zip file entries
     #
     # @return [Array<Entry>] array of entries
-    #
-    # @raise [CorruptZipFileError] the zip file is corrupt
     def get_entries(filename)
       child = POSIX::Spawn::Child.new('unzip', '-l', filename, SPAWN_CHILD_OPTS)
       raise CorruptZipFileError if child.status.exitstatus != 0
