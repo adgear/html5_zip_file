@@ -25,7 +25,7 @@ module HTML5ZipFile
     #
     # Note: if corruption is detected, an {File} object is
     # still yielded to the block, but its {#validate} method always
-    # returns false and its {#unpack} method is a noop.
+    # returns false and its {#unpack} method raises {ZipUnpack::CorruptZipFileError}.
     #
     # @param [String] file_name file name of zip file
     #
@@ -42,7 +42,7 @@ module HTML5ZipFile
       yield new(ZipUnpack::InfoZipFile.new(file_name))
       nil
     rescue ZipUnpack::CorruptZipFileError
-      yield new(ZipUnpack::CorruptFile.new)
+      yield new(ZipUnpack::CorruptZipFile.new)
       nil
     end
 
@@ -92,7 +92,7 @@ module HTML5ZipFile
     def validate(opts = {})
       @failures = []
 
-      if @zip_file.class == ZipUnpack::CorruptFile
+      if @zip_file.class == ZipUnpack::CorruptZipFile
         @failures << :zip
         return false
       end
@@ -144,6 +144,7 @@ module HTML5ZipFile
     # @return [void]
     #
     # @raise [DestinationError] if directory does not exist or is not empty
+    # @raise [ZipUnpack::CorruptZipFileError] if zip file is corrupt
     #
     # @example Unpack a zip file
     #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|

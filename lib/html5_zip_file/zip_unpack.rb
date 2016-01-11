@@ -26,49 +26,21 @@ module ZipUnpack
     end
   end
 
-  # @abstract
-  class ZipFile
+  class InfoZipFile
+
+    # Compatible Info-ZIP versions
+    VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']
+
+    InfoZipError = Class.new(StandardError)
+    UnzipBinaryBadVersionError = Class.new(InfoZipError)
+    UnzipBinaryParsingError = Class.new(InfoZipError)
 
     @@log = Logger.new(STDOUT)
     @@log.level = Logger::WARN
 
-    attr_reader :entries
-
-    def initialize
-      @name = ''
-      @entries = []
-    end
-
-    def size_packed
-      0
-    end
-
-    def unpack(dest)
-      nil
-    end
-
     def self.set_log_level(level)
       @@log.level = level
     end
-
-  end
-
-  class CorruptFile < ZipFile
-    def initialize
-      super()
-    end
-  end
-
-  class InfoZipFile < ZipFile
-
-    InfoZipError = Class.new(StandardError)
-
-    UnzipBinaryBadVersionError = Class.new(InfoZipError)
-
-    UnzipBinaryParsingError = Class.new(InfoZipError)
-
-    # Compatible Info-ZIP versions
-    VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']
 
     # @raise [UnzipBinaryNotFoundError] unzip binary not found
     # @raise [UnzipBinaryBadVersionError] unzip binary is wrong versions
@@ -76,11 +48,9 @@ module ZipUnpack
     #
     # @raise [CorruptZipFileError] the zip file is corrupt
     def initialize(filename)
-      super()
+      @entries = []
 
       @name = filename
-
-      # Set up sandbox
 
       # Check unzip command presence & version
       ver = get_infozip_version
@@ -96,18 +66,14 @@ module ZipUnpack
       @@log.info 'Info-ZIP: entries parsed'
     end
 
+    attr_reader :entries
+
     def size_packed
       @packed_size ||= File.size(@name)
     end
 
-    # Warning: user-provided zip files should always be unpacked in a sandbox
-    #
-    # @todo test "should raise exception if results don't match manifest"
-
     def unpack(dest)
       @@log.info "Info-ZIP: unpacking to #{dest}"
-
-      # sandbox here.
 
       exit_code, stdout, stderr = Subprocess::popen('unzip', '-d', dest, @name)
       raise CorruptZipFileError, "Unzip failed" if exit_code != 0
@@ -179,6 +145,12 @@ module ZipUnpack
       entries
     end
 
+  end
+
+  class CorruptZipFile
+    def unpack(d)
+      raise CorruptZipFileError
+    end
   end
 
 end
