@@ -7,7 +7,7 @@ module HTML5ZipFile
   class FileTest < Minitest::Test
 
     def setup
-      ZipUnpack::InfoZipFile.set_log_level Logger::FATAL
+      ZipUnpack::ZipFile.set_log_level Logger::FATAL
     end
 
     def test_validate_valid_zip

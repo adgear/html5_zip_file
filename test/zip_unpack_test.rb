@@ -4,14 +4,14 @@ require 'tmpdir'
 
 module ZipUnpack
 
-  class InfoZipFileTest < Minitest::Test
+  class ZipFileTest < Minitest::Test
 
     def setup
 
     end
 
     def f
-      InfoZipFile.new('test/data/test-ad.zip')
+      ZipFile.new('test/data/test-ad.zip')
     end
 
     # $ stat -f%z test/data/test-ad.zip
@@ -28,7 +28,7 @@ module ZipUnpack
     end
 
     def test_get_infozip_version
-      assert_includes InfoZipFile::VERSION_WHITELIST, f.send(:get_infozip_version)
+      assert_includes ZipFile::VERSION_WHITELIST, f.send(:get_infozip_version)
     end
 
     def test_parse_infozip_version_string
@@ -38,7 +38,7 @@ module ZipUnpack
 
       assert_equal 'UnZip 5.52', f.send(:parse_infozip_version_string, osx_5_52)
       assert_equal 'UnZip 6.0', f.send(:parse_infozip_version_string, debian_6_00)
-      assert_raises(InfoZipFile::UnzipBadVersionError) do
+      assert_raises(ZipFile::UnzipBadVersionError) do
         f.send(:parse_infozip_version_string, bad_version)
       end
     end
@@ -81,7 +81,7 @@ module ZipUnpack
          --------    ----   ----    ----
          --------                   -------
       EOS
-      assert_raises(InfoZipFile::UnzipParsingError) do
+      assert_raises(ZipFile::UnzipParsingError) do
         f.send(:parse_entries, stdout)
       end
     end
@@ -154,7 +154,7 @@ module ZipUnpack
          --------                   -------
           9999999                   6 files
       EOS
-      assert_raises(InfoZipFile::UnzipParsingError) do
+      assert_raises(ZipFile::UnzipParsingError) do
         f.send(:parse_entries, stdout)
       end
     end

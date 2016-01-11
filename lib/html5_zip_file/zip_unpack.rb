@@ -31,7 +31,7 @@ module ZipUnpack
   #
   # @raise [POSIX::Spawn::MaximumOutputExceeded] if output length > SPAWN_CHILD_OPTS:max bytes
   # @raise [POSIX::Spawn::TimeoutExceeded] execution time > SPAWN_CHILD_OPTS:timeout seconds
-  class InfoZipFile
+  class ZipFile
 
     # Compatible Info-ZIP versions
     VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']

@@ -39,7 +39,7 @@ module HTML5ZipFile
     #     f.entries.each { |e| puts(e.inspect()) }
     #   end #=> nil
     def self.open(file_name)
-      yield new(ZipUnpack::InfoZipFile.new(file_name))
+      yield new(ZipUnpack::ZipFile.new(file_name))
       nil
     rescue ZipUnpack::CorruptZipFileError
       yield new(ZipUnpack::CorruptZipFile.new)
