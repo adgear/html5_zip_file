@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'html5_zip_file'
-  s.version       = '1.0'
+  s.version       = '0.4.0'
   s.authors       = ['Patrick Paul-Hus', 'Curtis McEnroe', 'Simon Claret']
   s.email         = ['hydrozen@gmail.com', 'curtis.mcenroe@adgear.com', 'simon.claret@adgear.com']
 

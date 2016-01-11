@@ -4,15 +4,20 @@ NEXT
 * Remove rubyzip, nokogiri dependencies
 * Remove pry development dependency
 * Reimplement using Info-ZIP 'unzip'
+
 * Remove inject_script_tag()
 * Remove :contains_zip_file
 * Remove destroy_unpacked()
+
 * Hide HTML5ZipFile::File constructor
 
 * Add :size_packed
 * Rename :contents_size to :size_unpacked
+* Rename :entry_count to :entries
+* Rename :file_count to :file_entries
+* Rename :directory_count to :directory_entries
+* Remove :contains_zip_file
 
 * Document with YARD
 * Replace bin/ with rake tasks
 * Remove $LOAD_PATH mangling in lib/ and test/
-
