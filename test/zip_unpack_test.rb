@@ -77,7 +77,7 @@ module ZipUnpack
          --------    ----   ----    ----
          --------                   -------
       EOS
-      assert_raises(InfoZipFile::ParsingError) do
+      assert_raises(InfoZipFile::UnzipBinaryParsingError) do
         f.send(:parse_entries, stdout)
       end
     end
@@ -150,7 +150,7 @@ module ZipUnpack
          --------                   -------
           9999999                   6 files
       EOS
-      assert_raises(InfoZipFile::ParsingError) do
+      assert_raises(InfoZipFile::UnzipBinaryParsingError) do
         f.send(:parse_entries, stdout)
       end
     end

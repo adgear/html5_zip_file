@@ -65,14 +65,14 @@ module ZipUnpack
 
     UnzipBinaryBadVersionError = Class.new(InfoZipError)
 
-    ParsingError = Class.new(InfoZipError)
+    UnzipBinaryParsingError = Class.new(InfoZipError)
 
     # Compatible Info-ZIP versions
     VERSION_WHITELIST = ['UnZip 5.52', 'UnZip 6.0']
 
     # @raise [UnzipBinaryNotFoundError] unzip binary not found
     # @raise [UnzipBinaryBadVersionError] unzip binary is wrong versions
-    # @raise [ParsingError] unable to interpret output from unzip command
+    # @raise [UnzipBinaryParsingError] unable to interpret output from unzip command
     #
     # @raise [CorruptZipFileError] the zip file is corrupt
     def initialize(filename)
@@ -158,7 +158,7 @@ module ZipUnpack
 
     def parse_entries(stdout)
       lines = stdout.split("\n")
-      raise ParsingError, 'unzip -l output has too few lines.' \
+      raise UnzipBinaryParsingError, 'unzip -l output has too few lines.' \
                              if lines.size < 5
       entry_lines = lines.slice(3, lines.count - 5)
       entries = []
@@ -167,13 +167,13 @@ module ZipUnpack
           entry_size = $1.to_i
           entry_name = $2
           if entry_name[-1, 1] == '/'
-            raise ParsingError, "Directory entry with non-zero size." if entry_size != 0
+            raise UnzipBinaryParsingError, "Directory entry with non-zero size." if entry_size != 0
             entries << Entry.new(:directory, entry_name, entry_size)
           else
             entries << Entry.new(:file, entry_name, entry_size)
           end
         else
-          raise ParsingError, 'Bad entry line.'
+          raise UnzipBinaryParsingError, 'Bad entry line.'
         end
       end
       entries
