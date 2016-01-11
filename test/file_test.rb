@@ -6,28 +6,28 @@ module HTML5ZipFile
 
   class FileTest < Minitest::Test
 
-    def setup
-      ZipUnpack::ZipFile.set_log_level Logger::FATAL
-    end
-
-    def test_validate_valid_zip
+    def test_validate_good_zip_pass
       File.open('test/data/test-ad.zip') do |f|
         assert f.validate
         assert_empty f.failures
       end
     end
 
-    def test_validate_invalid_zip
+    def test_validate_corrupt_zip_fail
       File.open('test/data/invalid.zip') do |f|
         refute f.validate
         assert_equal [:zip], f.failures
 
         Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|
-          assert_raises(ZipUnpack::CorruptZipFileError) do
-            f.unpack(d)
-          end
+          assert_raises(ZipUnpack::CorruptZipFileError) { f.unpack(d) }
         end
 
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.size_packed }
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.size_unpacked }
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.entries }
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.file_entries }
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.directory_entries }
+        assert_raises(ZipUnpack::CorruptZipFileError) { f.html_file_entries }
       end
     end
 

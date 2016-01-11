@@ -158,6 +158,12 @@ module ZipUnpack
     def unpack(d)
       raise CorruptZipFileError
     end
+    def size_packed
+      raise CorruptZipFileError
+    end
+    def entries
+      raise CorruptZipFileError
+    end
   end
 
 end

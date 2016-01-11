@@ -23,14 +23,16 @@ module HTML5ZipFile
     # You can also call {#size_packed}, {#size_unpacked}, {#entries},
     # {#file_entries}, {#directory_entries} and {#html_file_entries}.
     #
-    # Note: if corruption is detected, an {File} object is
-    # still yielded to the block, but its {#validate} method always
-    # returns false and its {#unpack} method raises {ZipUnpack::CorruptZipFileError}.
+    # Note: if corruption is detected, an {File} object is still
+    # yielded to the block, but its {#validate} method returns false
+    # and all other aforementioned methods raise
+    # {ZipUnpack::CorruptZipFileError}.
     #
     # @param [String] file_name file name of zip file
     #
     # @yieldparam f [HTML5ZipFile::File]
-    # @return [void]
+    #
+    # @return [nil] all work must be performed on the {File}object yielded to the block.
     #
     # @example Open a zip file
     #
