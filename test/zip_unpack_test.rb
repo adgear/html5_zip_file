@@ -31,14 +31,16 @@ module ZipUnpack
       assert_includes InfoZipFile::VERSION_WHITELIST, f.send(:get_infozip_version)
     end
 
-    def test_parse_infozip_version
+    def test_parse_infozip_version_string
       osx_5_52 = 'UnZip 5.52 of 28 February 2005, by Info-ZIP.  Maintained by C. Spieler.  Send\nbug reports'
       debian_6_00 = 'UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.\n\nLatest sources and'
       bad_version = 'UnZip 3.00 of 20 April 1945, by StrangeDistro. Original by Info-ZIP.\n\nLatest sources and.'
 
-      assert_equal 'UnZip 5.52', f.send(:parse_infozip_version, osx_5_52)
-      assert_equal 'UnZip 6.0', f.send(:parse_infozip_version, debian_6_00)
-      assert_equal false, f.send(:parse_infozip_version, bad_version)
+      assert_equal 'UnZip 5.52', f.send(:parse_infozip_version_string, osx_5_52)
+      assert_equal 'UnZip 6.0', f.send(:parse_infozip_version_string, debian_6_00)
+      assert_raises(InfoZipFile::UnzipBadVersionError) do
+        f.send(:parse_infozip_version_string, bad_version)
+      end
     end
 
     def test_crc_valid?
@@ -47,7 +49,9 @@ module ZipUnpack
     end
 
     def test_get_entries
-      assert_equal false, f.send(:get_entries, 'test/data/invalid.zip')
+      assert_raises(CorruptZipFileError) do
+        f.send(:get_entries, 'test/data/invalid.zip')
+      end
       assert_equal 6, f.send(:get_entries, 'test/data/test-ad.zip').size
     end
 
@@ -77,7 +81,7 @@ module ZipUnpack
          --------    ----   ----    ----
          --------                   -------
       EOS
-      assert_raises(InfoZipFile::UnzipBinaryParsingError) do
+      assert_raises(InfoZipFile::UnzipParsingError) do
         f.send(:parse_entries, stdout)
       end
     end
@@ -150,7 +154,7 @@ module ZipUnpack
          --------                   -------
           9999999                   6 files
       EOS
-      assert_raises(InfoZipFile::UnzipBinaryParsingError) do
+      assert_raises(InfoZipFile::UnzipParsingError) do
         f.send(:parse_entries, stdout)
       end
     end

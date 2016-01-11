@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
 
   s.require_paths = ['lib']
 
+  s.add_runtime_dependency 'posix-spawn'
+
   # built-in to ruby 2.2.2, but Travis CI still needs it in the Gemfile
   s.add_development_dependency 'rake'
 
