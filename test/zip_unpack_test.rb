@@ -14,48 +14,53 @@ module ZipUnpack
       ZipFile.new('test/data/test-ad.zip')
     end
 
-    # $ stat -f%z test/data/test-ad.zip
-    # 729889
-    def test_size_packed
-      assert_equal 729_889, f.size_packed
+    def test_initialize_noncorrupt_pass
+      f
     end
 
-    def test_unpack
-      Dir.mktmpdir do |d|
-        f.unpack(d)
-        assert_equal 5, Dir.new(d).entries.size
+    def test_initialize_corrupt_fail
+      assert_raises(CorruptZipFileError) do
+        ZipFile.new('test/data/invalid.zip')
       end
     end
 
-    def test_get_infozip_version
+    def test_get_infozip_version_thismachine_pass
       assert_includes ZipFile::VERSION_WHITELIST, f.send(:get_infozip_version)
     end
 
-    def test_parse_infozip_version_string
+    def test_parse_infozip_version_string_whitelisted_pass
       osx_5_52 = 'UnZip 5.52 of 28 February 2005, by Info-ZIP.  Maintained by C. Spieler.  Send\nbug reports'
       debian_6_00 = 'UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.\n\nLatest sources and'
-      bad_version = 'UnZip 3.00 of 20 April 1945, by StrangeDistro. Original by Info-ZIP.\n\nLatest sources and.'
-
       assert_equal 'UnZip 5.52', f.send(:parse_infozip_version_string, osx_5_52)
       assert_equal 'UnZip 6.0', f.send(:parse_infozip_version_string, debian_6_00)
+    end
+
+    def test_parse_infozip_version_string_unwhitelisted_fail
+      bad_version = 'UnZip 3.00 of 20 April 1945, by StrangeDistro. Original by Info-ZIP.\n\nLatest sources and.'
       assert_raises(ZipFile::UnzipBadVersionError) do
         f.send(:parse_infozip_version_string, bad_version)
       end
     end
 
-    def test_crc_valid?
+    def test_crc_valid_noncorrupt_pass
       assert f.send(:crc_valid?, 'test/data/test-ad.zip')
+    end
+
+    def test_crc_valid_corrupt_fail
       refute f.send(:crc_valid?, 'test/data/invalid.zip')
     end
 
-    def test_get_entries
-      assert_raises(CorruptZipFileError) do
-        f.send(:get_entries, 'test/data/invalid.zip')
-      end
+    def test_get_entries_noncorrupt_pass
       assert_equal 6, f.send(:get_entries, 'test/data/test-ad.zip').size
     end
 
-    def test_parse_entries
+    def test_get_entries_corrupt_fail
+      assert_raises(CorruptZipFileError) do
+        f.send(:get_entries, 'test/data/invalid.zip')
+      end
+    end
+
+    def test_parse_entries_odd_spacing_pass
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -74,7 +79,7 @@ module ZipUnpack
       assert_equal entries[4].name,'images/test.png'
     end
 
-    def test_parse_entries_bad_stdout
+    def test_parse_entries_bad_stdout_fail
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -86,7 +91,7 @@ module ZipUnpack
       end
     end
 
-    def test_parse_entries_empty_zip_file
+    def test_parse_entries_empty_zip_file_pass
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -98,7 +103,7 @@ module ZipUnpack
       assert_equal 0, entries.size
     end
 
-    def test_parse_entries_nonstandard_names
+    def test_parse_entries_nonstandard_names_pass
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -125,7 +130,7 @@ module ZipUnpack
       assert_equal 'index page.html', entries[7].name
     end
 
-    def test_parse_entries_zero_sized_file
+    def test_parse_entries_zero_sized_file_pass
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -143,7 +148,7 @@ module ZipUnpack
       assert_equal 0, entries[2].size
     end
 
-    def test_parse_entries_non_zero_sized_dir
+    def test_parse_entries_non_zero_sized_dir_fail
       stdout = <<-EOS
          Archive:  test-ad.zip
          Length      Date   Time    Name
@@ -157,6 +162,23 @@ module ZipUnpack
       assert_raises(ZipFile::UnzipParsingError) do
         f.send(:parse_entries, stdout)
       end
+    end
+
+    def test_unpack
+      Dir.mktmpdir do |d|
+        f.unpack(d)
+        assert_equal 5, Dir.new(d).entries.size
+      end
+    end
+
+    def test_entries
+      assert_equal 6, f.entries.size
+    end
+
+    # $ stat -f%z test/data/test-ad.zip
+    # 729889
+    def test_size_packed
+      assert_equal 729_889, f.size_packed
     end
 
   end

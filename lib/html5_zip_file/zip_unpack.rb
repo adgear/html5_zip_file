@@ -60,7 +60,6 @@ module ZipUnpack
     # @raise [CorruptZipFileError] the zip file is corrupt
     def initialize(filename)
       @filename = filename
-      @entries = []
 
       # Check unzip command presence & version
       ver = get_infozip_version
