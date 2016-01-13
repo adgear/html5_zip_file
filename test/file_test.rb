@@ -222,14 +222,6 @@ module HTML5ZipFile
         end
       end
 
-      def test_destroy_unpacked
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.destroy_unpacked
-
-          refute Dir.exists?('test/unpack')
-        end
-      end
 
 
 

@@ -123,12 +123,6 @@ module HTML5ZipFile
       end
     end
 
-    # Destroy previously unpacked contents.
-    def destroy_unpacked
-      return unless @unpack_dest && Dir.exists?(@unpack_dest)
-      FileUtils.remove_entry_secure(@unpack_dest, :force => true)
-      @unpack_dest = nil
-    end
 
 
     private

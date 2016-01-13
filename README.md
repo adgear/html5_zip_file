@@ -59,12 +59,10 @@ end
 
 The `unpack` method unpacks the zip file contents to a new or empty directory.
 
-The `destroy_unpacked` cleans up previously unpacked files.
 
 ```ruby
 HTML5ZipFile::File.open('path/to/file.zip') do |f|
   f.unpack('data')
-  f.destroy_unpacked
 end
 ```
 
