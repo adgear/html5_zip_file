@@ -25,3 +25,6 @@ NEXT
     * Remove :contains_zip_file
     * Hide constructor
     * Improve exceptions
+
+* Add doctests
+

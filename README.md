@@ -26,6 +26,37 @@ Run tests:
 
 ## Usage
 
+Run doctests: {HTML5ZipFile::File.open},
+{HTML5ZipFile::File#validate} and {HTML5ZipFile::File#unpack}.
+
+    $ bundle exec yard doctest -v
+    Run options: -v --seed 20077
+
+    # Running:
+
+    Failed validation checks:
+    size_unpacked
+    file_count
+    HTML5ZipFile::File#validate#test_0001_Validate a zip file = 0.02 s = .
+    entries:
+    #<ZipUnpack::Entry:0x007fc209c494b0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007fc209c493c0 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007fc209c492d0 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007fc209c491e0 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007fc209c490a0 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007fc209c48fb0 @ftype=:file, @name="foo/index2.html", @size=41>
+    HTML5ZipFile::File.open#test_0001_Open a zip file = 0.03 s = .
+    /var/folders/_h/d4trcrkn3mv3w307j7_w3xbh0000gn/T/HTML5ZipFile_extract_20160108-93132-xa8xu9
+    .
+    ..
+    foo
+    images
+    index.html
+    HTML5ZipFile::File#unpack#test_0001_Unpack a zip file = 0.04 s = .
+
+    Finished in 0.092421s, 32.4601 runs/s, 32.4601 assertions/s.
+
+    3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
 
 ## Integrate
 
@@ -39,6 +70,35 @@ Execute:
 
     $ bundle install
 
+
+## Docs / Doctests
+
+Use current ruby.
+
+http://yardoc.org
+
+    $ bundle exec yard help
+
+    $ bundle exec yard doc --files test/kitchen_sink.rb
+
+    $ bundle exec yard server -r
+    $ rm -rf .yardoc/
+    $ bundle exec yard server -r -m
+    $ bundle exec yard help server
+
+    $ bundle exec yard list --query '@todo'
+
+    $ bundle exec yard graph --full --dependencies | dot -Tpng -o outfile.png
+
+https://github.com/p0deje/yard-doctest
+
+    $ bundle exec yard config load_plugins true
+
+    $ bundle exec yard config -a autoload_plugins yard-doctest
+
+    $ bundle exec yard doctest -h
+
+    $ bundle exec yard doctest -v
 
 ## External Dependency
 

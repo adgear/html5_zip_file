@@ -38,6 +38,12 @@ module HTML5ZipFile
     # @raise [UnzipBadVersionError] unzip version string not whitelisted
     # @raise [UnzipParsingError] unable to parse output from unzip command
     #
+    # @example Open a zip file
+    #
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #     puts "entries:"
+    #     f.entries.each { |e| puts(e.inspect()) }
+    #   end #=> nil
     def self.open(file_name)
       yield new(ZipUnpack::ZipFile.new(file_name))
       nil
@@ -73,6 +79,21 @@ module HTML5ZipFile
     #
     # @return [Boolean] false if the zip file is corrupt or if any validation checks fail
     #
+    # @example Validate a zip file
+    #
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #
+    #     if f.validate( :size_unpacked => 3, :file_count => 3)
+    #       puts 'Passed validation checks.'
+    #     else
+    #       if f.failures.include? :zip
+    #         puts 'File is not a valid zip file.'
+    #       end
+    #       puts 'Failed validation checks: '
+    #       f.failures.each { |failure|  puts(failure) }
+    #     end
+    #
+    #   end #=> nil
     def validate(opts = {})
       @failures = []
 
@@ -130,6 +151,16 @@ module HTML5ZipFile
     # @raise [DestinationError] if directory does not exist or is not empty
     # @raise [ZipUnpack::CorruptZipFileError] if zip file is corrupt
     #
+    # @example Unpack a zip file
+    #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
+    #
+    #      Dir.mktmpdir("HTML5ZipFile_extract_") do |dir|
+    #        f.unpack(dir)
+    #        puts dir
+    #        puts Dir.entries(dir)
+    #      end
+    #
+    #   end #=> nil
     def unpack(destination)
       # raise InexistentError if !Dir.exists?(destination)
       # @deprecated ruby 1.8.7 compat
