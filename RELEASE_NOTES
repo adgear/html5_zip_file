@@ -10,3 +10,4 @@ NEXT
     * Remove superfluous bin scripts
     * Remove superfluous version file
     * Remove $LOAD_PATH mangling
+    * Remove bundler rake tasks

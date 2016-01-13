@@ -1,4 +1,3 @@
-require "bundler/gem_tasks"
 require "rake/testtask"
 
 Rake::TestTask.new(:test) do |t|
@@ -18,4 +17,5 @@ task :console do
   ARGV.clear
   IRB.start
 end
+
 task :default => :test
