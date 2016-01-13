@@ -29,3 +29,5 @@ NEXT
 * Add doctests
 
 * Add kitchen sink example
+
+* Set up CI

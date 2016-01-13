@@ -6,7 +6,9 @@ Project home: https://github.com/adgear/html5_zip_file
 
 Yard docs: https://adgear.github.io/html5_zip_file/frames.html
 
+Travis CI: https://travis-ci.org/adgear/html5_zip_file
 
+[![Build Status](https://travis-ci.org/adgear/html5_zip_file.svg?branch=ruby-1-8-7-compat)](https://travis-ci.org/adgear/html5_zip_file)
 
 ## Install for development
 
