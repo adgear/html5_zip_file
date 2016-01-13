@@ -14,3 +14,4 @@ NEXT
     * Remove minitest reporters
     * Remove byebug, pry and bundler
     * Make rubygems work under ruby 1.8.7
+    * Add gemspec for ruby 1.8.7

@@ -22,61 +22,67 @@ Or install it yourself as:
 
 ```ruby
 require 'html5_zip_file'
+## Gems
 
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  # ...
-end
-```
+Separate gemspecs are maintained for 'current' ruby and ruby 1.8.7.
 
-### Validation
+Current ruby has rubygems built-in.
 
-The `validate` method validates the zip file itself as well as other options:
+    $ chruby 2.2.2
 
-- `:size`: maximum zip file size
-- `:entry_count`: maximum number of entries (files and directories)
-- `:file_count`: maximum number of files
-- `:directory_count`: maximum number of directories
-- `:path_length`: maximum path length in characters
-- `:path_components`: maximum number of path components
-- `:contains_html_file`: require or disallow HTML files to exist
+    $ gem build html5_zip_file.gemspec
+    Successfully built RubyGem
+    Name: html5_zip_file
+    Version: 1.0
+    File: html5_zip_file-1.0.gem
 
-If any validations failed, their keys will be in `failures` and `validate` will
-return false.
+    $ gem install [--dev] html5_zip_file-1.0.gem
+    Successfully installed html5_zip_file-1.0
+    Parsing documentation for html5_zip_file-1.0
+    Installing ri documentation for html5_zip_file-1.0
+    Done installing documentation for html5_zip_file after 0 seconds
 
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  unless f.validate(:path_length => 25)
-    if f.failures.include? :zip
-      puts 'File is not a valid zip'
-    elsif f.failures.include? :path_length
-      puts 'File contains paths exceeding maximum length'
-    end
-  end
-end
-```
+    $ gem which html5_zip_file
+    /Users/MYUSER/.gem/ruby/2.2.2/gems/html5_zip_file-1.0/lib/html5_zip_file.rb
 
-### Unpack & destroy
+    $ irb
+    irb(main):001:0> require 'html5_zip_file'
 
-The `unpack` method unpacks the zip file contents to a new or empty directory.
+Ruby 1.8.7 does not have rubygems built-in: install rubygems 1.3.6
+manually.
 
+    $ chruby 1.8.7
 
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  f.unpack('data')
-end
-```
+    $ gem --version
+    1.3.6
 
-## Development
+    $ gem build html5_zip_file_1_8_7.gemspec
+    Successfully built RubyGem
+    Name: html5_zip_file_1_8_7
+    Version: 1.0
+    File: html5_zip_file_1_8_7-1.0.gem
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run
-`rake test` to run the tests. You can also run `bin/console` for an interactive
-prompt that will allow you to experiment.
+    $ gem install [--dev] html5_zip_file_1_8_7-1.0.gem
+    Successfully installed html5_zip_file_1_8_7-1.0
+    1 gem installed
+    Installing ri documentation for html5_zip_file_1_8_7-1.0...
+    Installing RDoc documentation for html5_zip_file_1_8_7-1.0...
 
-To install this gem onto your local machine, run `bundle exec rake install`. To
-release a new version, update the version number in `version.rb`, and then run
-`bundle exec rake release`, which will create a git tag for the version, push
-git commits and tags, and push the `.gem` file to
-[rubygems.org](https://rubygems.org).
+    $ gem which html5_zip_file
+    /Users/MYUSER/.gem/ruby/1.8.7/gems/html5_zip_file_1_8_7-1.0/lib/html5_zip_file.rb
+
+    $ irb
+    irb(main):001:0> require 'rubygems'
+    irb(main):002:0> require 'html5_zip_file'
+    irb(main):003:0> HTML5ZipFile::File
+    => HTML5ZipFile::File
+
+Note: if "gem install --dev" deadlocks, just install without --dev and
+"gem install X" the development gems manually.
+
+In theory, you could build gems, push them to a repository such as
+rubygems.org, and install them in your destination environment with
+"gem install XXX".
 
 ## Contributing
 
