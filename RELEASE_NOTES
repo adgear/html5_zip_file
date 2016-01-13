@@ -11,3 +11,4 @@ NEXT
     * Remove superfluous version file
     * Remove $LOAD_PATH mangling
     * Remove bundler rake tasks
+    * Remove minitest reporters
