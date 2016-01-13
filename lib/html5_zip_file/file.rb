@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'rubygems'
+
 require 'pathname'
 require 'zip'
 

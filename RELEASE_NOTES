@@ -13,3 +13,4 @@ NEXT
     * Remove bundler rake tasks
     * Remove minitest reporters
     * Remove byebug, pry and bundler
+    * Make rubygems work under ruby 1.8.7
