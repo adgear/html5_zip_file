@@ -1,0 +1,4 @@
+NEXT
+
+* Refocus on core functionality
+  * Remove inject_script_tag()

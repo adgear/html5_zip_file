@@ -69,18 +69,6 @@ HTML5ZipFile::File.open('path/to/file.zip') do |f|
 end
 ```
 
-### Inject script tag
-
-The `inject_script_tag` method injects a script tag into all previously
-unpacked HTML files.
-
-```ruby
-HTML5ZipFile::File.open('path/to/file.zip') do |f|
-  f.unpack('data')
-  f.inject_script_tag('<script src="example.js"></script>')
-end
-```
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run

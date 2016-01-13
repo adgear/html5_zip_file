@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'nokogiri'
 require 'pathname'
 require 'zip'
 
@@ -135,38 +134,6 @@ module HTML5ZipFile
       @unpack_dest = nil
     end
 
-    # Inject a script tag into alll unpacked HTML files, replacing any
-    # previously injected script tag.
-    #
-    # Raises #NotUnpacked if #unpack has not been called.
-    # Raises #InvalidScriptTag if +script_tag+ does not contain a valid tag.
-    def inject_script_tag(script_tag)
-      raise NotUnpacked, 'Zip file not unpacked' unless @unpack_dest
-
-      html_file_entries.each do |entry|
-        path = ::File.join(@unpack_dest, entry.name)
-
-        data = ::File.read(path)
-        html = Nokogiri::HTML.parse("<!DOCTYPE html>\n" + data)
-
-        script_fragment = Nokogiri::HTML.fragment(script_tag)
-        tag = script_fragment.at_css('script')
-        raise InvalidScriptTag, 'Script tag missing' unless tag
-        tag['data-adgear-html5'] = 'true'
-
-        if existing_tag = html.at_css('script[data-adgear-html5="true"]')
-          existing_tag.replace(tag)
-        elsif head_tag = html.at_css('head')
-          head_tag.prepend_child(tag)
-        elsif html_tag = html.at_css('html')
-          html_tag.prepend_child(tag)
-        else
-          html.prepend_child(tag)
-        end
-
-        ::File.write(path, html.to_s)
-      end
-    end
 
     private
 

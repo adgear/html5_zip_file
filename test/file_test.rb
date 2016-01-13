@@ -243,58 +243,9 @@ module HTML5ZipFile
         end
       end
 
-      def test_inject_script_tag_not_unpacked
-        assert_raises(NotUnpacked) do
-          File.open('test/data/test-ad.zip') do |f|
-            f.inject_script_tag('<script></script>')
-          end
-        end
-      end
 
-      def test_inject_script_tag_invalid
-        assert_raises(InvalidScriptTag) do
-          File.open('test/data/test-ad.zip') do |f|
-            f.unpack('test/unpack')
-            f.inject_script_tag('<div></div>')
-          end
-        end
-      end
 
-      def test_inject_script_tag
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.inject_script_tag('<script src="test.js"></script>')
 
-          data = ::File.read('test/unpack/index.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('head script[src="test.js"]')
-
-          data = ::File.read('test/unpack/foo/index.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('html script[src="test.js"]')
-
-          data = ::File.read('test/unpack/foo/index2.html')
-          assert data.start_with?('<!DOCTYPE html>')
-          html = Nokogiri::HTML.parse(data)
-          assert html.at_css('script[src="test.js"]')
-        end
-      end
-
-      def test_inject_script_tag_replace
-        File.open('test/data/test-ad.zip') do |f|
-          f.unpack('test/unpack')
-          f.inject_script_tag('<script src="a.js"></script>')
-          f.inject_script_tag('<script src="b.js"></script>')
-
-          data = ::File.read('test/unpack/index.html')
-          html = Nokogiri::HTML.parse(data)
-
-          assert html.at_css('script[src="b.js"]')
-          refute html.at_css('script[src="a.js"]')
-        end
-      end
     end
   end
 end
