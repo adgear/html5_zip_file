@@ -2,3 +2,4 @@ NEXT
 
 * Refocus on core functionality
   * Remove inject_script_tag()
+  * Remove :contains_zip_file

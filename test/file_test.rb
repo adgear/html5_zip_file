@@ -108,18 +108,7 @@ module HTML5ZipFile
       end
     end
 
-    def test_validate_valid_contains_zip_file
-      File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contains_zip_file => false)
-      end
-    end
 
-    def test_validate_invalid_contains_zip_file
-      File.open('test/data/test-ad-with-zip.zip') do |f|
-        refute f.validate(:contains_zip_file => false)
-        assert_equal [:contains_zip_file], f.failures
-      end
-    end
 
     def test_validate_mixed
       File.open('test/data/test-ad.zip') do |f|
@@ -131,7 +120,6 @@ module HTML5ZipFile
           :path_length => 10,
           :path_components => 5,
           :contains_html_file => true,
-          :contains_zip_file => false
         )
         refute valid
         assert_equal 2, f.failures.size

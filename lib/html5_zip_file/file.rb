@@ -29,7 +29,6 @@ module HTML5ZipFile
     # - +:path_length+:: maximum path length in characters
     # - +:path_components+:: maximum number of path components
     # - +:contains_html_file+:: require or disallow HTML files to exist
-    # - +:contains_zip_file+:: require or disallow embedded zip files to exist
     #
     # Populates #failures with keywords of failed validations. If file is not
     # a valid zip, #failures will contain +:zip+.
@@ -71,9 +70,6 @@ module HTML5ZipFile
         @failures << :contains_html_file unless contains_html_file? == options[:contains_html_file]
       end
 
-      if options.has_key? :contains_zip_file
-        @failures << :contains_zip_file unless contains_zip_file? == options[:contains_zip_file]
-      end
 
       @failures.none?
     end
@@ -173,14 +169,6 @@ module HTML5ZipFile
       html_file_entries.any?
     end
 
-    def contains_zip_file?
-      zip_file_entries.any?
-    end
 
-    def zip_file_entries
-      @zip_file_entries ||= file_entries.select do |entry|
-        entry.name =~ /\.zip\z/i
-      end
-    end
   end
 end

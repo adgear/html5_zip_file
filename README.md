@@ -39,7 +39,6 @@ The `validate` method validates the zip file itself as well as other options:
 - `:path_length`: maximum path length in characters
 - `:path_components`: maximum number of path components
 - `:contains_html_file`: require or disallow HTML files to exist
-- `:contains_zip_file`: require or disallow embedded zip files to exist
 
 If any validations failed, their keys will be in `failures` and `validate` will
 return false.
