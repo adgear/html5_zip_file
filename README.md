@@ -70,6 +70,24 @@ Execute:
 
     $ bundle install
 
+See {file:test/kitchen_sink.rb kitchen_sink.rb} for an example of how to actually use the code.
+
+    $ bundle exec ruby test/kitchen_sink.rb
+    I, [2016-01-08T17:42:27.565892 #93089]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2016-01-08T17:42:27.574506 #93089]  INFO -- : Info-ZIP: CRC check passed
+    I, [2016-01-08T17:42:27.578093 #93089]  INFO -- : Info-ZIP: entries parsed
+    size_unpacked: 732274
+    #<ZipUnpack::Entry:0x007f93141a29e0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007f93141a2800 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007f93141a2670 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007f93141a2468 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007f93141a2378 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007f93141a2210 @ftype=:file, @name="foo/index2.html", @size=41>
+    Failed validation checks:
+    size_unpacked
+    file_count
+    path_length
+    contains_html_file
 
 ## Docs / Doctests
 
