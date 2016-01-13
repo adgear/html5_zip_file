@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'html5_zip_file/file'
-require 'byebug'
 
 module HTML5ZipFile
   class FileTest < Minitest::Test

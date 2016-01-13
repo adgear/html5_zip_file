@@ -12,3 +12,4 @@ NEXT
     * Remove $LOAD_PATH mangling
     * Remove bundler rake tasks
     * Remove minitest reporters
+    * Remove byebug, pry and bundler
