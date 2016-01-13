@@ -15,3 +15,13 @@ NEXT
     * Remove byebug, pry and bundler
     * Make rubygems work under ruby 1.8.7
     * Add gemspec for ruby 1.8.7
+  * Refactor HTML5ZipFile::File (remove rubyzip & improve interface)
+    * Replace rubyzip with posix-spawn / 'unzip'
+    * Add :size_packed
+    * Rename :contents_size to :size_unpacked
+    * Rename :entry_count to :entries
+    * Rename :file_count to :file_entries
+    * Rename :directory_count to :directory_entries
+    * Remove :contains_zip_file
+    * Hide constructor
+    * Improve exceptions
