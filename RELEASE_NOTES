@@ -9,3 +9,4 @@ NEXT
   * Modify tooling 
     * Remove superfluous bin scripts
     * Remove superfluous version file
+    * Remove $LOAD_PATH mangling
