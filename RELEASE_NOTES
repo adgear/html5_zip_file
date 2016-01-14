@@ -1,0 +1,33 @@
+NEXT
+
+* Refocus on core functionality
+  * Remove inject_script_tag()
+  * Remove :contains_zip_file
+  * Remove destroy_unpacked()
+
+* Make compat with ruby 1.8.7
+  * Modify tooling 
+    * Remove superfluous bin scripts
+    * Remove superfluous version file
+    * Remove $LOAD_PATH mangling
+    * Remove bundler rake tasks
+    * Remove minitest reporters
+    * Remove byebug, pry and bundler
+    * Make rubygems work under ruby 1.8.7
+    * Add gemspec for ruby 1.8.7
+  * Refactor HTML5ZipFile::File (remove rubyzip & improve interface)
+    * Replace rubyzip with posix-spawn / 'unzip'
+    * Add :size_packed
+    * Rename :contents_size to :size_unpacked
+    * Rename :entry_count to :entries
+    * Rename :file_count to :file_entries
+    * Rename :directory_count to :directory_entries
+    * Remove :contains_zip_file
+    * Hide constructor
+    * Improve exceptions
+
+* Add doctests
+
+* Add kitchen sink example
+
+* Set up CI
