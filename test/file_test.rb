@@ -172,6 +172,14 @@ module HTML5ZipFile
       end
     end
 
+    def test_validate_bad_validation_key_exception
+      File.open('test/data/test-ad.zip') do |f|
+        assert_raises(ArgumentError) do
+          f.validate(:file_count => 999)
+        end
+      end
+    end
+
     def test_unpack_good_destination_pass
       File.open('test/data/test-ad.zip') do |f|
         Dir.mktmpdir("HTML5ZipFile_extract_TEST_UNPACK_") do |d|

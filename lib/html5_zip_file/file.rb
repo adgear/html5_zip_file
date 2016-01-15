@@ -95,6 +95,12 @@ module HTML5ZipFile
     #
     #   end #=> nil
     def validate(opts = {})
+
+      valid_opts = [:size_packed, :size_unpacked, :entries,
+                    :file_entries, :directory_entries, :path_length,
+                    :path_components, :contains_html_file]
+      raise ArgumentError, "Unrecognized validation key" unless opts.keys.all?{ |o| valid_opts.include?(o) }
+
       @failures = []
 
       if @zip_file.class == ZipUnpack::CorruptZipFile
