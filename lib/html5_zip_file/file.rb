@@ -32,7 +32,7 @@ module HTML5ZipFile
     #
     # @yieldparam f [HTML5ZipFile::File]
     #
-    # @return [nil] all work must be performed on the {File}object yielded to the block.
+    # @return [nil] all work must be performed on the {File} object yielded to the block.
     #
     # @raise [Errno::ENOENT] unzip command line binary not found in $PATH
     # @raise [UnzipBadVersionError] unzip version string not whitelisted
@@ -83,7 +83,7 @@ module HTML5ZipFile
     #
     #   HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
     #
-    #     if f.validate( :size_unpacked => 3, :file_count => 3)
+    #     if f.validate( :size_unpacked => 3, :file_entries => 3)
     #       puts 'Passed validation checks.'
     #     else
     #       if f.failures.include? :zip

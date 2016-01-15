@@ -32,31 +32,32 @@ Run doctests: {HTML5ZipFile::File.open},
 {HTML5ZipFile::File#validate} and {HTML5ZipFile::File#unpack}.
 
     $ bundle exec yard doctest -v
-    Run options: -v --seed 20077
 
     # Running:
 
+    entries:
+    #<ZipUnpack::Entry:0x007ff943af05c0 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007ff943af0480 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007ff943af02c8 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007ff943af0138 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007ff943aebf98 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007ff943aebea8 @ftype=:file, @name="foo/index2.html", @size=41>
+    HTML5ZipFile::File.open#test_0001_Open a zip file = 0.01 s = .
+
     Failed validation checks:
     size_unpacked
-    file_count
-    HTML5ZipFile::File#validate#test_0001_Validate a zip file = 0.02 s = .
-    entries:
-    #<ZipUnpack::Entry:0x007fc209c494b0 @ftype=:file, @name="index.html", @size=112>
-    #<ZipUnpack::Entry:0x007fc209c493c0 @ftype=:directory, @name="images/", @size=0>
-    #<ZipUnpack::Entry:0x007fc209c492d0 @ftype=:file, @name="images/test.png", @size=732059>
-    #<ZipUnpack::Entry:0x007fc209c491e0 @ftype=:directory, @name="foo/", @size=0>
-    #<ZipUnpack::Entry:0x007fc209c490a0 @ftype=:file, @name="foo/index.html", @size=62>
-    #<ZipUnpack::Entry:0x007fc209c48fb0 @ftype=:file, @name="foo/index2.html", @size=41>
-    HTML5ZipFile::File.open#test_0001_Open a zip file = 0.03 s = .
-    /var/folders/_h/d4trcrkn3mv3w307j7_w3xbh0000gn/T/HTML5ZipFile_extract_20160108-93132-xa8xu9
+    file_entries
+    HTML5ZipFile::File#validate#test_0001_Validate a zip file = 0.01 s = .
+
+    /var/folders/_h/d4trcrkn3mv3w307j7_w3xbh0000gn/T/HTML5ZipFile_extract_20160115-67900-hdxmoc
     .
     ..
     foo
     images
     index.html
-    HTML5ZipFile::File#unpack#test_0001_Unpack a zip file = 0.04 s = .
+    HTML5ZipFile::File#unpack#test_0001_Unpack a zip file = 0.02 s = .
 
-    Finished in 0.092421s, 32.4601 runs/s, 32.4601 assertions/s.
+    Finished in 0.055291s, 54.2580 runs/s, 54.2580 assertions/s.
 
     3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
 
@@ -75,19 +76,22 @@ Execute:
 See {file:test/kitchen_sink.rb kitchen_sink.rb} for an example of how to actually use the code.
 
     $ bundle exec ruby test/kitchen_sink.rb
-    I, [2016-01-08T17:42:27.565892 #93089]  INFO -- : Info-ZIP: found version UnZip 5.52
-    I, [2016-01-08T17:42:27.574506 #93089]  INFO -- : Info-ZIP: CRC check passed
-    I, [2016-01-08T17:42:27.578093 #93089]  INFO -- : Info-ZIP: entries parsed
+    I, [2016-01-15T11:15:18.107693 #68031]  INFO -- : Info-ZIP: found version UnZip 5.52
+    I, [2016-01-15T11:15:18.114819 #68031]  INFO -- : Info-ZIP: CRC check passed
+    I, [2016-01-15T11:15:18.116761 #68031]  INFO -- : Info-ZIP: entries parsed
+
     size_unpacked: 732274
-    #<ZipUnpack::Entry:0x007f93141a29e0 @ftype=:file, @name="index.html", @size=112>
-    #<ZipUnpack::Entry:0x007f93141a2800 @ftype=:directory, @name="images/", @size=0>
-    #<ZipUnpack::Entry:0x007f93141a2670 @ftype=:file, @name="images/test.png", @size=732059>
-    #<ZipUnpack::Entry:0x007f93141a2468 @ftype=:directory, @name="foo/", @size=0>
-    #<ZipUnpack::Entry:0x007f93141a2378 @ftype=:file, @name="foo/index.html", @size=62>
-    #<ZipUnpack::Entry:0x007f93141a2210 @ftype=:file, @name="foo/index2.html", @size=41>
+
+    #<ZipUnpack::Entry:0x007fa89a161170 @ftype=:file, @name="index.html", @size=112>
+    #<ZipUnpack::Entry:0x007fa89a161030 @ftype=:directory, @name="images/", @size=0>
+    #<ZipUnpack::Entry:0x007fa89a160ec8 @ftype=:file, @name="images/test.png", @size=732059>
+    #<ZipUnpack::Entry:0x007fa89a160db0 @ftype=:directory, @name="foo/", @size=0>
+    #<ZipUnpack::Entry:0x007fa89a160c98 @ftype=:file, @name="foo/index.html", @size=62>
+    #<ZipUnpack::Entry:0x007fa89a160ba8 @ftype=:file, @name="foo/index2.html", @size=41>
+
     Failed validation checks:
     size_unpacked
-    file_count
+    file_entries
     path_length
     contains_html_file
 
@@ -146,7 +150,7 @@ be run and the gem updated as necessary.
 ## Security
 
 A first layer of security is provided by imposing sensible limits on
-:size_unpacked, :entry_count, :path_length and :path components via
+:size_unpacked, :entries, :path_length and :path_components via
 {HTML5ZipFile::File#validate}.
 
 ### Zip entry metadata
@@ -254,18 +258,9 @@ manually.
     irb(main):003:0> HTML5ZipFile::File
     => HTML5ZipFile::File
 
-Note: if "gem install --dev" deadlocks, just install without --dev and
-"gem install X" the development gems manually.
-
 In theory, you could build gems, push them to a repository such as
 rubygems.org, and install them in your destination environment with
 "gem install XXX".
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at
-https://github.com/adgear/html5_zip_file.
-
 
 ## License
 

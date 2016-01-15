@@ -10,7 +10,7 @@ HTML5ZipFile::File.open('test/data/test-ad.zip') do |f|
   f.entries.each { |e| puts(e.inspect()) }
 
   if f.validate( :size_unpacked => 700000,
-                 :file_count => 3,
+                 :file_entries => 3,
                  :path_length => 14,
                  :contains_html_file => false )
 
