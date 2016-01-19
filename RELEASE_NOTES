@@ -1,4 +1,4 @@
-NEXT
+Version 0.4.0 [Released January 19 2016]
 
 * Refocus on core functionality
   * Remove inject_script_tag()
