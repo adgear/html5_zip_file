@@ -78,10 +78,7 @@ module HTML5ZipFile
       end
 
       if options.has_key? :forbidden_characters
-        @failures << :forbidden_characters if
-          entries.map(&:name).any? { |n|
-            ::File.basename(n).match(options[:forbidden_characters])
-          }
+        @failures << :forbidden_characters if forbidden_characters? options[:forbidden_characters]
       end
 
       @failures.none?
@@ -216,6 +213,14 @@ module HTML5ZipFile
 
     def contains_zip_file?
       zip_file_entries.any?
+    end
+
+    def forbidden_characters? chars
+      entries.map(&:name).any? do |name|
+        Pathname.new(name).each_filename.any? do |component|
+          component.match(chars)
+        end
+      end
     end
 
     def zip_file_entries
