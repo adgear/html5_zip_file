@@ -31,6 +31,7 @@ module HTML5ZipFile
     # - +:path_components+:: maximum number of path components
     # - +:contains_html_file+:: require or disallow HTML files to exist
     # - +:contains_zip_file+:: require or disallow embedded zip files to exist
+    # - +:forbidden_characters:: disallow characters that match this regexp in any entry
     #
     # Populates #failures with keywords of failed validations. If file is not
     # a valid zip, #failures will contain +:zip+.
@@ -74,6 +75,13 @@ module HTML5ZipFile
 
       if options.has_key? :contains_zip_file
         @failures << :contains_zip_file unless contains_zip_file? == options[:contains_zip_file]
+      end
+
+      if options.has_key? :forbidden_characters
+        @failures << :forbidden_characters if
+          entries.map(&:name).any? { |n|
+            ::File.basename(n).match(options[:forbidden_characters])
+          }
       end
 
       @failures.none?

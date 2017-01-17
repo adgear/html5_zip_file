@@ -147,6 +147,19 @@ module HTML5ZipFile
       end
     end
 
+    def test_validate_forbidden_characters
+      File.open('test/data/test-ad-with-spaces.zip') do |f|
+        refute f.validate(:forbidden_characters => /[ ]/)
+        assert_equal [:forbidden_characters], f.failures
+      end
+    end
+
+    def test_validate_forbidden_characters_only_in_filenames
+      File.open('test/data/test-ad-with-spaces.zip') do |f|
+        assert f.validate(:forbidden_characters => /[\/]/)
+      end
+    end
+
     def test_contents_size
       File.open('test/data/test-ad.zip') do |f|
         assert_equal 732274, f.contents_size
