@@ -1,16 +1,4 @@
-env:
-  global:
-  - secure: mt99FaLQjHGl9o3LxT9OXcihMnjiVZVow/2x2Rq7zLtRfu4O7Jq0jHhh1OCeH6eKOvSNz/e24FbUNJGOm0QyEteR8Kki9foKPlwDpaSibnf+RRq6BGit5qVn6xq8c9gv+SN1y9Lt+HgxhqHoX1EdOnl+VcHlUvbYIs0rxNzZixiu8hSIa62sfJSYn+97V21qj065ASmNWWY+NavwTwQpKfvHiokRgKrOIwe1V4g73Wa/fRMpz/qtKpxNpm/C0IK/kjf4EbUPs5Tzs3MSfQ8UpgjiA9Ki3mwZYDNSLvCfpN/U/JG3zI80OC7zdPx3hz/kLCr81tgGSJ6o1jwtZd+AsFNRzU5zdbmNth+6jZFLRgnnalOkpjrYg2DCeoV3Pcay7iFymw60JlmW/QuQQ3K4h0cJoe6yPHSNTkkAeZbjv1vSlUR3MgDLv0y/bwNM5zn73TXCy516/F5gpJRHWc0Uq8VLWLHplmD5xKSHIAQlL+/zUiI2LGCePR08DtYTn++QhCkdL208HwlFObrc3I2gh5db6x2MlOKe1O2KqXcOUdKz0mXssgO3zBCSSJukN16uio9ZJsQ+osfnHeDU70uC/XVOg2iukNJkJKSEkT6H0UPGQKv8b9W5Z4hhahTDLz0dICLGGahOvbRRFFWHHU6Ax3eeTX60QLFWXVPlGqm9vLk=
 language: ruby
-matrix:
-  include:
-  - rvm: 2.2.2
-    gemfile: Gemfile
-    script:
-      - bundle exec rake test
-      - bundle exec yard config load_plugins true
-      - bundle exec yard config -a autoload_plugins yard-doctest
-      - bundle exec yard doctest 1>/dev/null
-      - ./build_docs.sh
-  - rvm: 1.8.7
-    gemfile: Gemfile_1_8_7
+rvm:
+  - 2.2.3
+before_install: gem install bundler -v 1.10.6

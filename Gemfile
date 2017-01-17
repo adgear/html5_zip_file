@@ -1,3 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gemspec :name => 'html5_zip_file'
+# Specify your gem's dependencies in html5_zip_file.gemspec
+gemspec

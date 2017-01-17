@@ -1,4 +1,9 @@
-require 'rubygems'
-
+require "html5_zip_file/version"
 require "html5_zip_file/file"
-require "html5_zip_file/zip_unpack"
+
+module HTML5ZipFile
+  Error = Class.new(StandardError)
+  DestinationNotEmpty = Class.new(Error)
+  NotUnpacked = Class.new(Error)
+  InvalidScriptTag = Class.new(Error)
+end
