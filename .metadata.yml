@@ -5,7 +5,7 @@ metadata:
     # either one of the following product, platform, practice.
     # See https://adgear.atlassian.net/wiki/spaces/ENG/pages/19146211708/Product+-+Platform+-+Practice    #
     stack: Ruby
-    practice: Engineering
+    product: dsp
     #
     # Both jira-project and jira-board can be extract from from your Jira project board URL.
     # For instance, in https://adgear.atlassian.net/jira/software/c/projects/RI/boards/180    # project is RI, and board 180.
@@ -24,8 +24,8 @@ metadata:
     - url: https://adgear.atlassian.net/l/cp/9kD8ZGRe
       title: DSP-API Confluence page.
 
-  spec:
-  owner: cg-maintainers-dsp-api
+spec:
+  owner: cg-dsp-api
   # Here are the types
   # service: is of course a system running on a workload instance, listening for requests at a particular port over a network, serving response in various payload.
   # library: is a component used by one or many other component(s).
