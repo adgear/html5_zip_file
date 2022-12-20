@@ -1,16 +1,17 @@
 metadata:
-  name: html5_zip_file
-  description: This gem facilitates the unpacking, validation (size, file_count, path etc.,) and manipulation of html 5 zip file
+  name: "html5_zip_file"
+  description: "This gem facilitates the unpacking, validation (size, file_count, path etc.,) and manipulation of html 5 zip file"
+  labels:
     #
     # either one of the following product, platform, practice.
     # See https://adgear.atlassian.net/wiki/spaces/ENG/pages/19146211708/Product+-+Platform+-+Practice    #
-    stack: Ruby
-    product: dsp
+    stack: "Ruby"
+    product: "dsp"
     #
     # Both jira-project and jira-board can be extract from from your Jira project board URL.
     # For instance, in https://adgear.atlassian.net/jira/software/c/projects/RI/boards/180    # project is RI, and board 180.
     #
-    jira-project: SDSP
+    jira-project: "SDSP"
     jira-board: 182
     #
     # If spec.type is service or website, whether or not it is accessible outside the Samsung network
@@ -22,7 +23,7 @@ metadata:
   links:
     # Here is any link you feel is worth sharing. A confluence page for your component group is a good candidate.
     - url: https://adgear.atlassian.net/l/cp/9kD8ZGRe
-      title: DSP-API Confluence page.
+      title: "DSP-API Confluence page"
 
 spec:
   owner: cg-dsp-api
