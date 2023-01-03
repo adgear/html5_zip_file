@@ -1,0 +1,46 @@
+name: CI
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+jobs:
+  test:
+    name: tests / ruby
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6.10', '3.0']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1.133.0
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Install dependencies
+        run: bundle install --jobs 4
+      - name: Run tests
+        run: bundle exec rake
+  rubocop:
+    name: linters / rubocop
+    runs-on: ubuntu-latest
+    env:
+      RUBY_VERSION: 2.6.10
+      RUBOCOP_VERSION: 1.41.1
+    steps:
+      - name: Codebase Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.133.0
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+          cache-version: 1
+
+      - name: rubocop
+        uses: reviewdog/action-rubocop@v2.3.0
+        with:
+          rubocop_version: ${{ env.RUBOCOP_VERSION }}
+          rubocop_extensions: rubocop-performance rubocop-rake rubocop-i18n
+          reporter: github-check
+          fail_on_error: true
