@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest-reporters", "~> 1.1"
   spec.add_development_dependency "pry", "~> 0.10"
   spec.add_development_dependency "byebug", "~> 8.0"
+  spec.add_development_dependency 'rubocop', '~> 1.41.1'
 
   spec.add_dependency "rubyzip", "~> 1.0"
   spec.add_dependency "nokogiri", "~> 1.6"
