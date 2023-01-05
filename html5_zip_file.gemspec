@@ -27,12 +27,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.10"
+  spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.8"
   spec.add_development_dependency "minitest-reporters", "~> 1.1"
   spec.add_development_dependency "pry", "~> 0.10"
   spec.add_development_dependency "byebug", "~> 8.0"
+  spec.add_development_dependency 'rubocop', '~> 1.41.1'
 
   spec.add_dependency "rubyzip", "~> 1.0"
   spec.add_dependency "nokogiri", "~> 1.6"
