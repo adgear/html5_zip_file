@@ -1,5 +1,5 @@
-require "html5_zip_file/version"
-require "html5_zip_file/file"
+require 'html5_zip_file/version'
+require 'html5_zip_file/file'
 
 module HTML5ZipFile
   Error = Class.new(StandardError)
