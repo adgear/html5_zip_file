@@ -19,104 +19,104 @@ module HTML5ZipFile
 
     def test_validate_valid_contents__size
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contents_size => 20_000_000)
+        assert f.validate(contents_size: 20_000_000)
       end
     end
 
     def test_validate_invalid_contents_size
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:contents_size => 100_000)
+        refute f.validate(contents_size: 100_000)
         assert_equal [:contents_size], f.failures
       end
     end
 
     def test_validate_valid_entry_count
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:entry_count => 6)
+        assert f.validate(entry_count: 6)
       end
     end
 
     def test_validate_invalid_entry_count
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:entry_count => 5)
+        refute f.validate(entry_count: 5)
         assert_equal [:entry_count], f.failures
       end
     end
 
     def test_validate_valid_file_count
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:file_count => 4)
+        assert f.validate(file_count: 4)
       end
     end
 
     def test_validate_invalid_file_count
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:file_count => 3)
+        refute f.validate(file_count: 3)
         assert_equal [:file_count], f.failures
       end
     end
 
     def test_validate_valid_directory_count
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:directory_count => 2)
+        assert f.validate(directory_count: 2)
       end
     end
 
     def test_validate_invalid_directory_count
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:directory_count => 1)
+        refute f.validate(directory_count: 1)
         assert_equal [:directory_count], f.failures
       end
     end
 
     def test_validate_valid_path_length
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:path_length => 15)
+        assert f.validate(path_length: 15)
       end
     end
 
     def test_validate_invalid_path_length
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:path_length => 14)
+        refute f.validate(path_length: 14)
         assert_equal [:path_length], f.failures
       end
     end
 
     def test_validate_valid_path_components
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:path_components => 2)
+        assert f.validate(path_components: 2)
       end
     end
 
     def test_validate_invalid_path_components
       File.open('test/data/test-ad.zip') do |f|
-        refute f.validate(:path_components => 1)
+        refute f.validate(path_components: 1)
         assert_equal [:path_components], f.failures
       end
     end
 
     def test_validate_valid_contains_html_file
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contains_html_file => true)
+        assert f.validate(contains_html_file: true)
       end
     end
 
     def test_validate_invalid_contains_html_file
       File.open('test/data/test-ad-no-html.zip') do |f|
-        refute f.validate(:contains_html_file => true)
+        refute f.validate(contains_html_file: true)
         assert_equal [:contains_html_file], f.failures
       end
     end
 
     def test_validate_valid_contains_zip_file
       File.open('test/data/test-ad.zip') do |f|
-        assert f.validate(:contains_zip_file => false)
+        assert f.validate(contains_zip_file: false)
       end
     end
 
     def test_validate_invalid_contains_zip_file
       File.open('test/data/test-ad-with-zip.zip') do |f|
-        refute f.validate(:contains_zip_file => false)
+        refute f.validate(contains_zip_file: false)
         assert_equal [:contains_zip_file], f.failures
       end
     end
@@ -124,14 +124,14 @@ module HTML5ZipFile
     def test_validate_mixed
       File.open('test/data/test-ad.zip') do |f|
         valid = f.validate(
-          :size => 1_000_000,
-          :entry_count => 6,
-          :file_count => 2,
-          :directory_count => 2,
-          :path_length => 10,
-          :path_components => 5,
-          :contains_html_file => true,
-          :contains_zip_file => false
+          size: 1_000_000,
+          entry_count: 6,
+          file_count: 2,
+          directory_count: 2,
+          path_length: 10,
+          path_components: 5,
+          contains_html_file: true,
+          contains_zip_file: false
         )
         refute valid
         assert_equal 2, f.failures.size
@@ -142,27 +142,27 @@ module HTML5ZipFile
 
     def test_validate_invalid_zip_mixed
       File.open('test/data/invalid.zip') do |f|
-        refute f.validate(:entry_count => 6, :file_count => 2)
+        refute f.validate(entry_count: 6, file_count: 2)
         assert_equal [:zip], f.failures
       end
     end
 
     def test_validate_forbidden_characters
       File.open('test/data/test-ad-with-spaces.zip') do |f|
-        refute f.validate(:forbidden_characters => /[ ]/)
+        refute f.validate(forbidden_characters: / /)
         assert_equal [:forbidden_characters], f.failures
       end
     end
 
     def test_validate_forbidden_characters_only_in_filenames
       File.open('test/data/test-ad-with-spaces.zip') do |f|
-        assert f.validate(:forbidden_characters => /[\/]/)
+        assert f.validate(forbidden_characters: %r{/})
       end
     end
 
     def test_contents_size
       File.open('test/data/test-ad.zip') do |f|
-        assert_equal 732274, f.contents_size
+        assert_equal 732_274, f.contents_size
       end
     end
 
@@ -252,7 +252,7 @@ module HTML5ZipFile
           f.unpack('test/unpack')
           f.destroy_unpacked
 
-          refute Dir.exists?('test/unpack')
+          refute Dir.exist?('test/unpack')
         end
       end
 

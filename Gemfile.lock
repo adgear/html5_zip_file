@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    html5_zip_file (0.5.0)
+    html5_zip_file (0.6.0)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
 
@@ -21,6 +21,8 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    nokogiri (1.13.10-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.13.10-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.13.10-x86_64-linux)
@@ -31,9 +33,9 @@ GEM
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    racc (1.6.2)
+    racc (1.7.3)
     rainbow (3.1.1)
-    rake (10.5.0)
+    rake (12.3.3)
     regexp_parser (2.6.1)
     rexml (3.2.5)
     rubocop (1.41.1)
@@ -53,6 +55,7 @@ GEM
     unicode-display_width (2.4.2)
 
 PLATFORMS
+  arm64-darwin-22
   x86_64-darwin-21
   x86_64-linux
 
@@ -63,7 +66,7 @@ DEPENDENCIES
   minitest (~> 5.8)
   minitest-reporters (~> 1.1)
   pry (~> 0.10)
-  rake (~> 10.0)
+  rake (~> 12.3.3)
   rubocop (~> 1.41.1)
 
 BUNDLED WITH
