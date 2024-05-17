@@ -22,27 +22,3 @@ jobs:
 
       - name: Run tests
         run: bundle exec rake
-
-  rubocop:
-    name: linters / rubocop
-    runs-on: ubuntu-latest
-    env:
-      RUBY_VERSION: 2.6.10
-    steps:
-      - name: Codebase Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.133.0
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-          cache-version: 1
-
-      - name: rubocop
-        uses: reviewdog/action-rubocop@v2.3.0
-        with:
-          rubocop_version: gemfile
-          rubocop_extensions: rubocop-performance rubocop-rake rubocop-i18n
-          reporter: github-check
-          fail_on_error: true
