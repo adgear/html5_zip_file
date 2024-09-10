@@ -20,6 +20,7 @@ metadata:
     # Whether or not this repo is maintained for a component which processes sensitive data
     sensitive: false
     # See  https://adgear.atlassian.net/wiki/spaces/INFOSEC/pages/2300969047/AdGear+-+Cybersecurity+Due+Diligence#Glossary    sensitive: true
+    tier: "4"
   links:
     # Here is any link you feel is worth sharing. A confluence page for your component group is a good candidate.
     - url: https://adgear.atlassian.net/l/cp/9kD8ZGRe
